@@ -1,7 +1,6 @@
 package controller;
 
 import model.DatabaseInfo;
-import model.QueryHolder;
 
 import java.sql.*;
 
@@ -20,6 +19,10 @@ public class DBController {
 
     public void createTable(String query) throws SQLException {
         db.createTable(query);
+    }
+
+    public void tagAllSourceFiles() throws SQLException {
+        db.tagAllSourceFiles();
     }
 
 }

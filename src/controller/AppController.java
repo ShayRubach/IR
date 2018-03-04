@@ -2,10 +2,13 @@ package controller;
 
 import view.MainGui;
 
+import java.sql.SQLException;
+
 public class AppController {
 
     private MainGui         gui;
     private DBController    dbCtrl;
+
 
     public AppController(MainGui gui,DBController dbCtrl) {
         //attach gui & the DBController
@@ -30,5 +33,10 @@ public class AppController {
 
     public void setDbCtrl(DBController dbCtrl) {
         this.dbCtrl = dbCtrl;
+    }
+
+    //create index and posting files from the storage
+    public void tagSourceFiles() throws SQLException {
+        getDbCtrl().tagAllSourceFiles();
     }
 }

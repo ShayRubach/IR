@@ -4,26 +4,39 @@ public class QueryHolder {
 
     public static final String CREATE_INDEX_TABLE =
             "CREATE TABLE IF NOT EXISTS " +
-                    "index_table (" +
-                        "word 		VARCHAR(20) NOT NULL," +
-                        "doc_id 	INT NOT NULL," +
-                        "appears 	INT NOT NULL," +
-                        "PRIMARY KEY (word,doc_id)" +
-                    ");";
+                    "index_files (" +
+                        "word 		varchar(20) NOT NULL," +
+                        "doc_id 	int NOT NULL," +
+                        "appears 	int NOT NULL," +
+                        "FOREIGN KEY (doc_id) REFERENCES source_files(id) ON DELETE CASCADE, " +
+                        "PRIMARY KEY (word,doc_id))";
 
     public static final String CREATE_FILE_TABLE =
             "CREATE TABLE IF NOT EXISTS " +
-                    "file_table (" +
-                        "id 	INT NOT NULL," +
-                        "name 	VARCHAR(32) NOT NULL," +
-                        "link 	VARCHAR(64) NOT NULL," +
+                    "source_files (" +
+                        "id 	int NOT NULL AUTO_INCREMENT," +
+                        "name 	varchar(128) NOT NULL," +
+                        "link 	varchar(128) NOT NULL," +
                         "PRIMARY KEY (id)" +
                     ");";
 
-    public static final String INSERT_POSTING_FILE =
-            "INSERT INTO posting_table (" +
-                    "word, " +
-                    "document)" +
-                    "VALUES (?,?);";
+    public static final String REMOVE_FILE_FROM_SOURCE =
+            "DELETE FROM file_table " +
+            "WHERE id=?";
+
+    //perform safe check for dups
+    public static final String INSERT_SOURCE_FILE =
+            "INSERT INTO source_files (" +
+                "name, " +
+                "link) " +
+            "VALUES(?,?) ";
+
+    public static final String IS_SOURCE_FILE_EXISTS =
+            "SELECT COUNT(id) " +
+            "FROM source_files " +
+            "WHERE name=? AND link=?";
+
+
+
 
 }

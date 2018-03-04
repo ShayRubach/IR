@@ -10,17 +10,20 @@ public class appDemo {
 
     public static void main(String[] args) {
 
+        String localStoragePath = "./local_storage";
+        String sourceFilesPath  = "./source_files";
+
         MainGui         mainGui = new MainGui();
-        DatabaseInfo    dbInfo = new DatabaseInfo();
+        DatabaseInfo    dbInfo = new DatabaseInfo(sourceFilesPath,localStoragePath);
         DBController    dbCtrl = new DBController(dbInfo);
         AppController   appCtrl = new AppController(mainGui,dbCtrl);
-
 
 
         try {
             dbCtrl.connect();
             dbCtrl.createTable(QueryHolder.CREATE_FILE_TABLE);
             dbCtrl.createTable(QueryHolder.CREATE_INDEX_TABLE);
+            dbCtrl.tagAllSourceFiles();
 
         }
         catch (ClassNotFoundException e) {
