@@ -22,5 +22,4 @@ public class DBController {
         db.createTable(query);
     }
 
-
 }

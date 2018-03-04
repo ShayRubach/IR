@@ -10,15 +10,17 @@ public class appDemo {
 
     public static void main(String[] args) {
 
+        MainGui         mainGui = new MainGui();
         DatabaseInfo    dbInfo = new DatabaseInfo();
         DBController    dbCtrl = new DBController(dbInfo);
-        MainGui         mainGui = new MainGui();
         AppController   appCtrl = new AppController(mainGui,dbCtrl);
+
 
 
         try {
             dbCtrl.connect();
-            dbCtrl.createTable(QueryHolder.CREATE_POSTING_TABLE);
+            dbCtrl.createTable(QueryHolder.CREATE_FILE_TABLE);
+            dbCtrl.createTable(QueryHolder.CREATE_INDEX_TABLE);
 
         }
         catch (ClassNotFoundException e) {
