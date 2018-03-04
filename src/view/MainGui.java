@@ -1,12 +1,23 @@
 package view;
 
 import controller.DBController;
-import controller.GuiController;
+import controller.AppController;
+
+import javax.swing.*;
 
 public class MainGui {
 
-    private DBController    dbCtrl;
-    private GuiController   guiCtrl;
+    private AppController   appCtrl;
 
+    private JPanel mainFrame;
 
+    public MainGui() {}
+
+    public JPanel getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setAppCtrl(AppController guiCtrl) {
+        this.appCtrl = guiCtrl;
+    }
 }

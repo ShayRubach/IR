@@ -1,5 +1,5 @@
 import controller.DBController;
-import controller.GuiController;
+import controller.AppController;
 import model.DatabaseInfo;
 import model.QueryHolder;
 import view.MainGui;
@@ -13,10 +13,10 @@ public class appDemo {
         DatabaseInfo    dbInfo = new DatabaseInfo();
         DBController    dbCtrl = new DBController(dbInfo);
         MainGui         mainGui = new MainGui();
-        GuiController   guiCtrl = new GuiController(mainGui);
+        AppController   appCtrl = new AppController(mainGui,dbCtrl);
+
 
         try {
-
             dbCtrl.connect();
             dbCtrl.createTable(QueryHolder.CREATE_POSTING_TABLE);
 
