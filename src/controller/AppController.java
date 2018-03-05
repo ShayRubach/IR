@@ -3,26 +3,26 @@ package controller;
 import model.DatabaseInfo;
 import view.MainGui;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
 public class AppController {
 
     private MainGui         gui;
-    private DBController    dbCtrl;
-//    private DatabaseInfo    db;
+    private DatabaseInfo    db;
 
 
-    public AppController(MainGui gui,DBController dbCtrl) {
+    public AppController(MainGui gui,DatabaseInfo db) {
         //attach gui & the DBController
         setGui(gui);
-        setDbCtrl(dbCtrl);
+        setDb(db);
 
         //pass the gui a reference to this ctrlr (mvc)
         getGui().setAppCtrl(this);
     }
 
-    public DBController getDbCtrl() {
-        return dbCtrl;
+    public DatabaseInfo getDb() {
+        return db;
     }
 
     public MainGui getGui() {
@@ -33,16 +33,37 @@ public class AppController {
         this.gui = gui;
     }
 
-    public void setDbCtrl(DBController dbCtrl) {
-        this.dbCtrl = dbCtrl;
+    public void setDb(DatabaseInfo db) {
+        this.db = db;
     }
 
     //create index and posting files from the storage
-    public void tagSourceFiles() throws SQLException {
-        getDbCtrl().tagAllSourceFiles();
+    public void tagAllSourceFiles() throws SQLException {
+        getDb().tagAllSourceFiles();
     }
 
     public boolean isLoggedAsAdmin() {
-        return dbCtrl.isLoggedAsAdmin();
+        return db.isLoggedAsAdmin();
+    }
+
+    public void connect() throws SQLException, ClassNotFoundException {
+        getDb().connect();
+    }
+
+    public void createTable(String query) throws SQLException {
+        getDb().createTable(query);
+    }
+
+    public boolean verifyAdminPass(String pass) {
+
+        boolean result = false;
+        if(getDb().verifyAdminPass(pass))
+            result = true;
+
+        return result;
+    }
+
+    public void setAdminAccess(boolean access) {
+        db.setAdminAccess(access);
     }
 }

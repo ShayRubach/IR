@@ -1,4 +1,4 @@
-import controller.DBController;
+
 import controller.AppController;
 import model.DatabaseInfo;
 import model.QueryHolder;
@@ -15,15 +15,14 @@ public class appDemo {
 
         MainGui         mainGui = new MainGui();
         DatabaseInfo    dbInfo = new DatabaseInfo(sourceFilesPath,localStoragePath);
-        DBController    dbCtrl = new DBController(dbInfo);
-        AppController   appCtrl = new AppController(mainGui,dbCtrl);
+        AppController   appCtrl = new AppController(mainGui,dbInfo);
 
 
         try {
-            dbCtrl.connect();
-            dbCtrl.createTable(QueryHolder.CREATE_FILE_TABLE);
-            dbCtrl.createTable(QueryHolder.CREATE_INDEX_TABLE);
-            dbCtrl.tagAllSourceFiles();
+            appCtrl.connect();
+            appCtrl.createTable(QueryHolder.CREATE_FILE_TABLE);
+            appCtrl.createTable(QueryHolder.CREATE_INDEX_TABLE);
+            appCtrl.tagAllSourceFiles();
 
         }
         catch (ClassNotFoundException e) {

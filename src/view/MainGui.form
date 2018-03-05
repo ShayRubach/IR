@@ -101,7 +101,7 @@
           <text value="Go"/>
         </properties>
       </component>
-      <component id="205a9" class="javax.swing.JButton" binding="searchButton" default-binding="true">
+      <component id="205a9" class="javax.swing.JButton" binding="btnSearch">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -163,8 +163,8 @@
           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <foreground color="-4521970"/>
-          <text value="Hello"/>
+          <focusCycleRoot value="true"/>
+          <text value="       "/>
         </properties>
       </component>
     </children>

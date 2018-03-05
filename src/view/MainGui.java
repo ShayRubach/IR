@@ -4,8 +4,6 @@ import controller.AppController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainGui {
 
@@ -16,7 +14,7 @@ public class MainGui {
     private JTable tableIndexDocResults;
     private JComboBox jcbDocNameResults;
     private JTextField tfSearchLine;
-    private JButton searchButton;
+    private JButton btnSearch;
     private JComboBox jcbAddDoc;
     private JComboBox jcbRemoveDoc;
     private JButton btnAddDoc;
@@ -29,6 +27,11 @@ public class MainGui {
     private JFrame mainFrame;
 
 
+    public static final String LOG_OUT = "Log Out";
+    public static final String LOG_IN = "Log In";
+    public static final String WRONG_PASSWORD = "Wrong password.";
+    public static final String LOGGED_AS_VISITOR = "Logged as: Visitor";
+    public static final String LOGGED_AS_ADMIN = "Logged as: Admin";
 
     private HelpWindow helpWindow = new HelpWindow();
 
@@ -36,8 +39,10 @@ public class MainGui {
         initMainFrame();
         initButtons();
         initButtonListeners();
+        initComboxBoxes();
 
-    }
+
+        }
 
 
     private void initMainFrame() {
@@ -56,6 +61,95 @@ public class MainGui {
 
     }
 
+
+    public void initButtons(){
+
+        btnLoginAsAdmin.setText(LOG_IN);
+        btnAddDoc.setEnabled(false);
+        btnRemoveDoc.setEnabled(false);
+    }
+
+    public void initComboxBoxes(){
+        jcbDocNameResults.setEnabled(false);
+        jcbAddDoc.setEnabled(false);
+        jcbRemoveDoc.setEnabled(false);
+    }
+
+    private void initButtonListeners() {
+
+        //Login/Logout button:
+        btnLoginAsAdmin.addActionListener(e -> {
+
+            if(appCtrl.isLoggedAsAdmin()){
+                //already logged as admin
+                setLblSystemMsg("");
+                btnLoginAsAdmin.setText(LOG_IN);
+                appCtrl.setAdminAccess(false);
+                getPfAdminPassword().setEnabled(true);
+                getPfAdminPassword().setBackground(Color.WHITE);
+                setLblLoggedAs(LOGGED_AS_VISITOR);
+
+                jcbAddDoc.setEnabled(false);
+                jcbRemoveDoc.setEnabled(false);
+
+                btnRemoveDoc.setEnabled(false);
+                btnAddDoc.setEnabled(false);
+            }
+            else {
+                //logged as visitor
+                String pass = getPfAdminPassword().getText().toString();
+                if(appCtrl.verifyAdminPass(pass)){
+                    setLblLoggedAs(LOGGED_AS_ADMIN);
+                    btnLoginAsAdmin.setText(LOG_OUT);
+                    appCtrl.setAdminAccess(true);
+                    getPfAdminPassword().setText("");
+                    getPfAdminPassword().setEnabled(false);
+                    getPfAdminPassword().setBackground(new Color(193, 196, 201));
+                    setLblSystemMsg("Hello");
+                    getLblSystemMsg().setForeground(new Color(13, 163, 8));
+
+                    jcbAddDoc.setEnabled(true);
+                    jcbRemoveDoc.setEnabled(true);
+
+                    btnRemoveDoc.setEnabled(true);
+                    btnAddDoc.setEnabled(true);
+
+                }
+                else {
+                    //wrong password
+                    setLblSystemMsg(WRONG_PASSWORD);
+                    getLblSystemMsg().setForeground(Color.RED);
+                }
+
+            }
+            return;
+        });
+
+
+        //Search button:
+        btnSearch.addActionListener(e -> {
+
+            //get search terms and make a toLowerCase()
+            //parse line
+            //detect operator
+
+        });
+
+
+
+
+    }
+
+    //TODO: implement this and keep the logic in gui
+    public void loadDb(){
+        //load db here
+    }
+
+
+    public JPasswordField getPfAdminPassword() {
+        return pfAdminPassword;
+    }
+
     public JPanel getMainPanel() {
         return mainPanel;
     }
@@ -64,22 +158,23 @@ public class MainGui {
         this.appCtrl = guiCtrl;
     }
 
+    public JLabel getLblLoggedAs() {
+        return lblLoggedAs;
+    }
 
-    public void initButtons(){
-        btnLoginAsAdmin.setEnabled(true);
-        btnAddDoc.setEnabled(false);
-        btnRemoveDoc.setEnabled(false);
+    public void setLblLoggedAs(String lblLoggedAs) {
+        this.lblLoggedAs.setText(lblLoggedAs);
+    }
+
+    public JLabel getLblSystemMsg() {
+        return lblSystemMsg;
+    }
+
+    public void setLblSystemMsg(String lblSystemMsg) {
+        this.lblSystemMsg.setText(lblSystemMsg);
     }
 
 
-    private void initButtonListeners() {
-        btnLoginAsAdmin.addActionListener(e -> {
 
-            if(appCtrl.isLoggedAsAdmin()){
-
-            }
-
-        });
-    }
 
 }

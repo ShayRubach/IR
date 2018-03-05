@@ -35,6 +35,8 @@ public class HelpWindow {
         for (String line : lines) {
             taHelpInformation.setText(taHelpInformation.getText() + "\n    " +  line.toString());
         }
+
+        getTaHelpInformation().setEditable(false);
     }
 
     private void initWindow() {
@@ -49,10 +51,14 @@ public class HelpWindow {
         int x = 0;
         int y = (int) ((dimension.getHeight() - mainFrame.getHeight()) / 2);
         mainFrame.setLocation(x, y);
+
     }
 
     public JPanel getMainWindow() {
         return mainWindow;
     }
 
+    public JTextArea getTaHelpInformation() {
+        return taHelpInformation;
+    }
 }

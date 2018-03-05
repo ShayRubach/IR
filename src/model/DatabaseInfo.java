@@ -1,37 +1,32 @@
 package model;
 
+import annotations.A;
+
 import java.io.File;
 import java.sql.*;
 
 public class DatabaseInfo {
 
+    public  PreparedStatement pStmt;
+    public  ResultSet rs;
+
+    public static final String ADMIN_PASS = "ir_master";
+
     private String localStoragePath;
     private String sourceFilesPath;
 
-    public static final String ADMIN_PASS = "ir_master";
+
     private String user = "root";
     private String pass = "";
     private String dbDriver = "com.mysql.jdbc.Driver";
     private String dbConfig = "jdbc:mysql://localhost:3306/IR?createDatabaseIfNotExist=true";
     private Connection conn;
-    public  PreparedStatement pStmt;
-    public  ResultSet rs;
     private boolean adminAccess = false;
 
-
-
-    public DatabaseInfo() {}
 
     public DatabaseInfo(String sourceFilesPath, String localStoragePath) {
         setSourceFilesPath(sourceFilesPath);
         setLocalStoragePath(localStoragePath);
-    }
-
-    public DatabaseInfo(String user, String pass, String dbDriver, String dbConfig) {
-        this.user = user;
-        this.pass = pass;
-        this.dbDriver = dbDriver;
-        this.dbConfig = dbConfig;
     }
 
     public void connect() throws ClassNotFoundException, SQLException {
@@ -44,9 +39,11 @@ public class DatabaseInfo {
         pStmt.execute();
     }
 
+    @A.Posting
     //tag a SINGLE source files and upload it to "source_files" table
     public void tagSourceFile(File f) throws SQLException {
 
+        
         String fullFilePath = f.getAbsolutePath().toString();
         String fixedFileName = f.getName().substring(0,f.getName().indexOf('.')).toString();
 
@@ -63,6 +60,7 @@ public class DatabaseInfo {
         }
     }
 
+    @A.Posting
     //tag all source files and upload them to "source_files" table
     public void tagAllSourceFiles() throws SQLException {
 
