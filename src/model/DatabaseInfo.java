@@ -8,6 +8,7 @@ public class DatabaseInfo {
     private String localStoragePath;
     private String sourceFilesPath;
 
+    public static final String ADMIN_PASS = "ir_master";
     private String user = "root";
     private String pass = "";
     private String dbDriver = "com.mysql.jdbc.Driver";
@@ -15,10 +16,7 @@ public class DatabaseInfo {
     private Connection conn;
     public  PreparedStatement pStmt;
     public  ResultSet rs;
-
-
-
-
+    private boolean adminAccess = false;
 
 
 
@@ -94,6 +92,26 @@ public class DatabaseInfo {
 
         return isAlreadyTagged;
     }
+
+    public boolean verifyAdminPass(String adminPass){
+        return ADMIN_PASS.equals(adminPass);
+    }
+
+    public void setAdminAccess(boolean adminAccess) {
+        this.adminAccess = adminAccess;
+    }
+
+    public boolean isLoggedAsAdmin(){
+        return adminAccess;
+    }
+
+
+
+
+
+
+
+
 
 
     public String getUser() {

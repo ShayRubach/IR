@@ -25,4 +25,7 @@ public class DBController {
         db.tagAllSourceFiles();
     }
 
+    public boolean isLoggedAsAdmin() {
+        return db.isLoggedAsAdmin();
+    }
 }

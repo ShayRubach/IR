@@ -1,5 +1,6 @@
 package controller;
 
+import model.DatabaseInfo;
 import view.MainGui;
 
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ public class AppController {
 
     private MainGui         gui;
     private DBController    dbCtrl;
+//    private DatabaseInfo    db;
 
 
     public AppController(MainGui gui,DBController dbCtrl) {
@@ -38,5 +40,9 @@ public class AppController {
     //create index and posting files from the storage
     public void tagSourceFiles() throws SQLException {
         getDbCtrl().tagAllSourceFiles();
+    }
+
+    public boolean isLoggedAsAdmin() {
+        return dbCtrl.isLoggedAsAdmin();
     }
 }

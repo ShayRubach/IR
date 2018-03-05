@@ -25,14 +25,20 @@ public class MainGui {
     private JButton btnLoginAsAdmin;
     private JLabel lblAppName;
     private JLabel lblLoggedAs;
+    private JLabel lblSystemMsg;
     private JFrame mainFrame;
+
+
 
     private HelpWindow helpWindow = new HelpWindow();
 
     public MainGui() {
         initMainFrame();
+        initButtons();
+        initButtonListeners();
 
     }
+
 
     private void initMainFrame() {
         mainFrame = new JFrame("IR System - by team_pwnz (c) ");
@@ -44,7 +50,7 @@ public class MainGui {
 
         //center window
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((dimension.getWidth() - mainFrame.getWidth()) / 2);
+        int x = (int) ( 150 + (dimension.getWidth() - mainFrame.getWidth()) / 2);
         int y = (int) ((dimension.getHeight() - mainFrame.getHeight()) / 2);
         mainFrame.setLocation(x, y);
 
@@ -60,8 +66,20 @@ public class MainGui {
 
 
     public void initButtons(){
-
+        btnLoginAsAdmin.setEnabled(true);
+        btnAddDoc.setEnabled(false);
+        btnRemoveDoc.setEnabled(false);
     }
 
+
+    private void initButtonListeners() {
+        btnLoginAsAdmin.addActionListener(e -> {
+
+            if(appCtrl.isLoggedAsAdmin()){
+
+            }
+
+        });
+    }
 
 }

@@ -53,7 +53,8 @@
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="      IR System"/>
+          <font name="MV Boli" size="16" style="1"/>
+          <text value=" IR System"/>
         </properties>
       </component>
       <component id="c8ae2" class="javax.swing.JComboBox" binding="jcbAddDoc">
@@ -132,14 +133,6 @@
           <text value="Login"/>
         </properties>
       </component>
-      <component id="826b3" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="============="/>
-        </properties>
-      </component>
       <component id="1f75e" class="javax.swing.JLabel">
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -164,6 +157,15 @@
           </grid>
         </constraints>
         <properties/>
+      </component>
+      <component id="e4412" class="javax.swing.JLabel" binding="lblSystemMsg">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <foreground color="-4521970"/>
+          <text value="Hello"/>
+        </properties>
       </component>
     </children>
   </grid>

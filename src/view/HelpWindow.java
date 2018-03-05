@@ -2,6 +2,12 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class HelpWindow {
     private JTextArea taHelpInformation;
@@ -10,14 +16,30 @@ public class HelpWindow {
 
 
     public HelpWindow() {
-
-        System.out.println("CREATED HELP WINDOW");
         initWindow();
+
+        try {
+            displayHelp();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void displayHelp() throws IOException {
+
+        Path path = Paths.get("src/view/","Help.txt");
+        Charset charset = Charset.forName("ISO-8859-1");
+
+        ArrayList<String> lines = (ArrayList<String>) Files.readAllLines(path, charset);
+
+        for (String line : lines) {
+            taHelpInformation.setText(taHelpInformation.getText() + "\n    " +  line.toString());
+        }
     }
 
     private void initWindow() {
         mainFrame = new JFrame("Help (?)");
-        mainFrame.setSize(360,800);
+        mainFrame.setSize(510,800);
         mainFrame.setContentPane(this.getMainWindow());
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
@@ -33,7 +55,4 @@ public class HelpWindow {
         return mainWindow;
     }
 
-    public JFrame getMainFrame() {
-        return mainFrame;
-    }
 }

@@ -1,0 +1,25 @@
+Supported Operation:
+====================
+
+- <keyword_1> && <keyword_2> ... && <keyword_N>
+- <keyword_1> || <keyword_2> ... || <keyword_N>
+- ( <keyword_1> && <keyword_2> ) || <keyword_N>
+- "<keyword_1>"
+
+
+
+
+
+
+
+Admin How-To:
+=============
+
+Login as admin with the secret password, and you will be able to perform:
+
+- Add new document to the local storage
+- Remove existing document from the local storage
+- Feel superior
+
+
+Enjoy.
