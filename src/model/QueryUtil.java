@@ -1,6 +1,6 @@
 package model;
 
-public class QueryHolder {
+public class QueryUtil {
 
     public static final String CREATE_INDEX_TABLE =
             "CREATE TABLE IF NOT EXISTS " +
@@ -17,7 +17,8 @@ public class QueryHolder {
                         "id 	int NOT NULL AUTO_INCREMENT," +
                         "name 	varchar(128) NOT NULL," +
                         "link 	varchar(128) NOT NULL," +
-                        "PRIMARY KEY (id)" +
+                        "display varchar(1) NOT NULL," +
+                    "PRIMARY KEY (id)" +
                     ");";
 
     public static final String REMOVE_FILE_FROM_SOURCE =
@@ -28,13 +29,17 @@ public class QueryHolder {
     public static final String INSERT_SOURCE_FILE =
             "INSERT INTO source_files (" +
                 "name, " +
-                "link) " +
-            "VALUES(?,?) ";
+                "link," +
+                "display ) " +
+            "VALUES(?,?,?) ";
 
     public static final String IS_SOURCE_FILE_EXISTS =
             "SELECT COUNT(id) " +
             "FROM source_files " +
             "WHERE name=? AND link=?";
 
-
+    public static final String GET_AVAILABLE_SOURCE_FILES =
+            "SELECT id,name,link " +
+            "FROM source_files " +
+            "WHERE display=1";
 }

@@ -1,18 +1,17 @@
 package controller;
 
-import model.DatabaseInfo;
+import model.DatabaseUtil;
 import view.MainGui;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
 public class AppController {
 
     private MainGui         gui;
-    private DatabaseInfo    db;
+    private DatabaseUtil db;
 
 
-    public AppController(MainGui gui,DatabaseInfo db) {
+    public AppController(MainGui gui, DatabaseUtil db) {
         //attach gui & the DBController
         setGui(gui);
         setDb(db);
@@ -21,7 +20,7 @@ public class AppController {
         getGui().setAppCtrl(this);
     }
 
-    public DatabaseInfo getDb() {
+    public DatabaseUtil getDb() {
         return db;
     }
 
@@ -33,7 +32,7 @@ public class AppController {
         this.gui = gui;
     }
 
-    public void setDb(DatabaseInfo db) {
+    public void setDb(DatabaseUtil db) {
         this.db = db;
     }
 
@@ -65,5 +64,9 @@ public class AppController {
 
     public void setAdminAccess(boolean access) {
         db.setAdminAccess(access);
+    }
+
+    public String[] getAvailableSourceFiles() throws SQLException {
+        return db.getAvailableSourceFiles();
     }
 }

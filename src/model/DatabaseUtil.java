@@ -4,13 +4,18 @@ import annotations.A;
 
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
 
-public class DatabaseInfo {
+public class DatabaseUtil {
 
     public  PreparedStatement pStmt;
     public  ResultSet rs;
 
     public static final String ADMIN_PASS = "ir_master";
+    public static final String HIDE = "0";
+    public static final String SHOW = "1";
+    public static final String DELIM = "^";
+
 
     private String localStoragePath;
     private String sourceFilesPath;
@@ -24,7 +29,7 @@ public class DatabaseInfo {
     private boolean adminAccess = false;
 
 
-    public DatabaseInfo(String sourceFilesPath, String localStoragePath) {
+    public DatabaseUtil(String sourceFilesPath, String localStoragePath) {
         setSourceFilesPath(sourceFilesPath);
         setLocalStoragePath(localStoragePath);
     }
@@ -43,7 +48,7 @@ public class DatabaseInfo {
     //tag a SINGLE source files and upload it to "source_files" table
     public void tagSourceFile(File f) throws SQLException {
 
-        
+
         String fullFilePath = f.getAbsolutePath().toString();
         String fixedFileName = f.getName().substring(0,f.getName().indexOf('.')).toString();
 
@@ -53,9 +58,10 @@ public class DatabaseInfo {
 
         //tag f to db as long as its not already there
         if(!fileAlreadyTagged(fixedFileName,fullFilePath)) {
-            pStmt = conn.prepareStatement(QueryHolder.INSERT_SOURCE_FILE);
+            pStmt = conn.prepareStatement(QueryUtil.INSERT_SOURCE_FILE);
             pStmt.setString(1,fixedFileName);
             pStmt.setString(2,fullFilePath);
+            pStmt.setString(3,SHOW);
             pStmt.execute();
         }
     }
@@ -76,7 +82,7 @@ public class DatabaseInfo {
     //check if a file is already tagged into DB
     private boolean fileAlreadyTagged(String name,String path) throws SQLException {
         boolean isAlreadyTagged = true;
-        pStmt = conn.prepareStatement(QueryHolder.IS_SOURCE_FILE_EXISTS);
+        pStmt = conn.prepareStatement(QueryUtil.IS_SOURCE_FILE_EXISTS);
         pStmt.setString(1,name);
         pStmt.setString(2,path);
         rs = pStmt.executeQuery();
@@ -91,6 +97,36 @@ public class DatabaseInfo {
         return isAlreadyTagged;
     }
 
+
+    @A.DBOperation
+    public String[] getAvailableSourceFiles() throws SQLException {
+
+        ArrayList<String> docArrayList = new ArrayList<>();
+        StringBuilder formattedRowString = new StringBuilder();
+
+        pStmt = conn.prepareStatement(QueryUtil.GET_AVAILABLE_SOURCE_FILES);
+        rs = pStmt.executeQuery();
+
+
+        //TODO: fox logic here so it returns String[] type
+        while(rs.next()){
+            //concat all returned fields with a delimiter separating them:
+            formattedRowString.append(rs.getString(1) + DELIM);
+            formattedRowString.append(rs.getString(2) + DELIM);
+            formattedRowString.append(rs.getString(3) + DELIM);
+
+            //add the concatenated string to the arraylist:
+            docArrayList.add(formattedRowString.toString());
+
+            //flush StringBuffer:
+            formattedRowString.setLength(0);
+        }
+
+        //convert the list to string[] and return it
+        return docArrayList.toArray(new String[docArrayList.size()]);
+    }
+
+
     public boolean verifyAdminPass(String adminPass){
         return ADMIN_PASS.equals(adminPass);
     }
@@ -102,6 +138,9 @@ public class DatabaseInfo {
     public boolean isLoggedAsAdmin(){
         return adminAccess;
     }
+
+
+
 
 
 
@@ -143,5 +182,4 @@ public class DatabaseInfo {
     public void setSourceFilesPath(String sourceFilesPath) {
         this.sourceFilesPath = sourceFilesPath;
     }
-
 }

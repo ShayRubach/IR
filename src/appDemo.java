@@ -1,7 +1,7 @@
 
 import controller.AppController;
-import model.DatabaseInfo;
-import model.QueryHolder;
+import model.DatabaseUtil;
+import model.QueryUtil;
 import view.MainGui;
 
 import java.sql.SQLException;
@@ -14,15 +14,16 @@ public class appDemo {
         String sourceFilesPath  = "./source_files";
 
         MainGui         mainGui = new MainGui();
-        DatabaseInfo    dbInfo = new DatabaseInfo(sourceFilesPath,localStoragePath);
+        DatabaseUtil dbInfo = new DatabaseUtil(sourceFilesPath,localStoragePath);
         AppController   appCtrl = new AppController(mainGui,dbInfo);
 
 
         try {
             appCtrl.connect();
-            appCtrl.createTable(QueryHolder.CREATE_FILE_TABLE);
-            appCtrl.createTable(QueryHolder.CREATE_INDEX_TABLE);
+            appCtrl.createTable(QueryUtil.CREATE_FILE_TABLE);
+            appCtrl.createTable(QueryUtil.CREATE_INDEX_TABLE);
             appCtrl.tagAllSourceFiles();
+            appCtrl.getGui().loadDbToApp();
 
         }
         catch (ClassNotFoundException e) {

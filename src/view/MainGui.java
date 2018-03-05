@@ -1,9 +1,11 @@
 package view;
 
+import annotations.A;
 import controller.AppController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class MainGui {
 
@@ -28,7 +30,7 @@ public class MainGui {
 
 
     public static final String LOG_OUT = "Log Out";
-    public static final String LOG_IN = "Log In";
+    public static final String LOG_IN  = "Log In";
     public static final String WRONG_PASSWORD = "Wrong password.";
     public static final String LOGGED_AS_VISITOR = "Logged as: Visitor";
     public static final String LOGGED_AS_ADMIN = "Logged as: Admin";
@@ -40,7 +42,6 @@ public class MainGui {
         initButtons();
         initButtonListeners();
         initComboxBoxes();
-
 
         }
 
@@ -70,9 +71,15 @@ public class MainGui {
     }
 
     public void initComboxBoxes(){
-        jcbDocNameResults.setEnabled(false);
+
+        jcbDocNameResults.setEnabled(true);
         jcbAddDoc.setEnabled(false);
         jcbRemoveDoc.setEnabled(false);
+
+        defaultComboBoxHeader(jcbDocNameResults,"Result");
+        defaultComboBoxHeader(jcbAddDoc,"Document");
+        defaultComboBoxHeader(jcbRemoveDoc,"Document");
+
     }
 
     private void initButtonListeners() {
@@ -140,10 +147,53 @@ public class MainGui {
 
     }
 
-    //TODO: implement this and keep the logic in gui
-    public void loadDb(){
-        //load db here
+    public void defaultComboBoxHeader(JComboBox jBox, String type){
+        if(null != jBox){
+            jBox.removeAllItems();
+            jBox.addItem("Select " + type);
+            jBox.addItem("");
+        }
     }
+
+    //TODO: implement this and keep the logic in gui
+    @A.DBOperation
+    public void loadDbToApp() throws SQLException {
+        //load db here
+
+        //get all available source files and display them on associated combo box:
+        String[] docList = appCtrl.getAvailableSourceFiles();
+        defaultComboBoxHeader(jcbAddDoc,"Document");
+
+        for(String doc : docList){
+            jcbAddDoc.addItem(doc);
+        }
+
+
+
+    }
+
+
+    @A.AdminOperation
+    @A.DBOperation
+    public boolean removeDocument(int docID){
+        boolean res = false;
+        if(/* some code */ true ){
+
+        }
+        return res;
+    }
+
+
+    @A.AdminOperation
+    @A.DBOperation
+    public boolean addDocument(int docID){
+        boolean res = false;
+        if(/* some code */ true ){
+
+        }
+        return res;
+    }
+
 
 
     public JPasswordField getPfAdminPassword() {
