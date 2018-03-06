@@ -30,6 +30,16 @@ public class QueryUtil {
                 "display ) " +
             "VALUES(?,?,?) ";
 
+    //perform safe check for dups
+    public static final String INSERT_NEW_INDEX_FILE =
+            "INSERT INTO index_files (" +
+                "word, " +
+                "doc_id," +
+                "appears ) " +
+            "VALUES(?,?,?) ";
+
+
+
     public static final String GET_DOC_ID_BY_LINK =
             "SELECT id FROM storage_files " +
                     "WHERE link=?";
