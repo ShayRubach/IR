@@ -53,11 +53,13 @@ public class ParserUtil {
             db.pStmt.execute();
         }
 
+
         //TODO: use the db to upload file to the index table
 
 
-    }
 
+    }
+    
     private void mapWords(String[] words, String line,HashMap<String,Integer> appearances) {
         for(String s : words){
             if(!appearances.containsKey(s))

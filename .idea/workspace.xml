@@ -3,8 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="104346fc-7a21-476b-b94c-604f91a98855" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/out/production/IR/model/ParserUtil.class" afterPath="$PROJECT_DIR$/out/production/IR/model/ParserUtil.class" />
+=======
+      <change beforePath="$PROJECT_DIR$/out/production/IR/model/DatabaseUtil.class" afterPath="$PROJECT_DIR$/out/production/IR/model/DatabaseUtil.class" />
+      <change beforePath="$PROJECT_DIR$/out/production/IR/model/ParserUtil.class" afterPath="$PROJECT_DIR$/out/production/IR/model/ParserUtil.class" />
+      <change beforePath="$PROJECT_DIR$/out/production/IR/model/QueryUtil.class" afterPath="$PROJECT_DIR$/out/production/IR/model/QueryUtil.class" />
+      <change beforePath="$PROJECT_DIR$/out/production/IR/view/StopList.txt" afterPath="$PROJECT_DIR$/out/production/IR/view/StopList.txt" />
+      <change beforePath="$PROJECT_DIR$/source_files/System Of A Down - Chop Suey.txt" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/model/DatabaseUtil.java" afterPath="$PROJECT_DIR$/src/model/DatabaseUtil.java" />
+>>>>>>> 162f83705b41ef6902b96c01023a4e5a88dd312e
       <change beforePath="$PROJECT_DIR$/src/model/ParserUtil.java" afterPath="$PROJECT_DIR$/src/model/ParserUtil.java" />
+      <change beforePath="$PROJECT_DIR$/src/model/QueryUtil.java" afterPath="$PROJECT_DIR$/src/model/QueryUtil.java" />
+      <change beforePath="$PROJECT_DIR$/src/view/StopList.txt" afterPath="$PROJECT_DIR$/src/view/StopList.txt" />
     </list>
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -112,11 +123,19 @@
           <file leaf-file-name="ParserUtil.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/model/ParserUtil.java">
               <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
                 <state relative-caret-position="430">
                   <caret line="58" column="5" lean-forward="true" selection-start-line="58" selection-start-column="5" selection-end-line="58" selection-end-column="5" />
                   <folding>
                     <element signature="e#2386#2387#0" expanded="true" />
                     <element signature="e#2434#2435#0" expanded="true" />
+=======
+                <state relative-caret-position="345">
+                  <caret line="58" column="5" lean-forward="true" selection-start-line="58" selection-start-column="5" selection-end-line="58" selection-end-column="5" />
+                  <folding>
+                    <element signature="e#2444#2445#0" expanded="true" />
+                    <element signature="e#2492#2493#0" expanded="true" />
+>>>>>>> 162f83705b41ef6902b96c01023a4e5a88dd312e
                   </folding>
                 </state>
               </provider>
@@ -259,6 +278,11 @@
             <path>
               <item name="IR" type="b2602c69:ProjectViewProjectNode" />
               <item name="IR" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="IR" type="b2602c69:ProjectViewProjectNode" />
+              <item name="IR" type="462c0819:PsiDirectoryNode" />
+              <item name="local_storage" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="IR" type="b2602c69:ProjectViewProjectNode" />
@@ -414,7 +438,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="59406000" />
+=======
+    <option name="totallyTimeSpent" value="58646000" />
+>>>>>>> 162f83705b41ef6902b96c01023a4e5a88dd312e
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
@@ -807,11 +835,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/ParserUtil.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="430">
           <caret line="58" column="5" lean-forward="true" selection-start-line="58" selection-start-column="5" selection-end-line="58" selection-end-column="5" />
           <folding>
             <element signature="e#2386#2387#0" expanded="true" />
             <element signature="e#2434#2435#0" expanded="true" />
+=======
+        <state relative-caret-position="345">
+          <caret line="58" column="5" lean-forward="true" selection-start-line="58" selection-start-column="5" selection-end-line="58" selection-end-column="5" />
+          <folding>
+            <element signature="e#2444#2445#0" expanded="true" />
+            <element signature="e#2492#2493#0" expanded="true" />
+>>>>>>> 162f83705b41ef6902b96c01023a4e5a88dd312e
           </folding>
         </state>
       </provider>
