@@ -173,8 +173,18 @@ public class DatabaseUtil {
         return docId;
     }
 
+
     public void moveFile(String fileName,String src,String dst) {
         File file = new File(src + "/" + fileName);
         file.renameTo(new File(dst + "/" + fileName));
     }
+
+
+
+
+
+
+
+
+
 }

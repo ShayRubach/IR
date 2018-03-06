@@ -58,7 +58,6 @@ public class AppController {
 
     public void addFileToStorage(String fileName) throws FileNotFoundException, SQLException {
         int docId = db.addFileToStorage(fileName);
-
         parser.indexFile(docId,fileName,db);
 
     }
