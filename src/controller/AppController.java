@@ -1,14 +1,16 @@
 package controller;
 
 import model.DatabaseUtil;
+import model.ParserUtil;
 import view.MainGui;
 
 import java.sql.SQLException;
 
 public class AppController {
 
-    private MainGui         gui;
+    private MainGui      gui;
     private DatabaseUtil db;
+    private ParserUtil parser = new ParserUtil();
 
 
     public AppController(MainGui gui, DatabaseUtil db) {
@@ -36,10 +38,7 @@ public class AppController {
         this.db = db;
     }
 
-    //create index and posting files from the storage
-    public void tagAllSourceFiles() throws SQLException {
-        getDb().tagAllSourceFiles();
-    }
+
 
     public boolean isLoggedAsAdmin() {
         return db.isLoggedAsAdmin();
@@ -66,7 +65,34 @@ public class AppController {
         db.setAdminAccess(access);
     }
 
-    public String[] getAvailableSourceFiles() throws SQLException {
-        return db.getAvailableSourceFiles();
+    public String[] getAvailableSourceFiles()  {
+        return db.getAvailableSourceFiles(db.getSourceFilesPath());
     }
+
+    public String parseSourceNameAndId(String sourceFile, String delim) {
+        return parser.parseSourceNameAndId(sourceFile, delim);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

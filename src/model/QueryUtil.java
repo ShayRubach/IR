@@ -8,38 +8,31 @@ public class QueryUtil {
                         "word 		varchar(20) NOT NULL," +
                         "doc_id 	int NOT NULL," +
                         "appears 	int NOT NULL," +
-                        "FOREIGN KEY (doc_id) REFERENCES source_files(id) ON DELETE CASCADE, " +
+                        "FOREIGN KEY (doc_id) REFERENCES storage_files(id) ON DELETE CASCADE, " +
                         "PRIMARY KEY (word,doc_id))";
 
-    public static final String CREATE_FILE_TABLE =
+
+    public static final String CREATE_STORAGE_FILES_TABLE =
             "CREATE TABLE IF NOT EXISTS " +
-                    "source_files (" +
-                        "id 	int NOT NULL AUTO_INCREMENT," +
-                        "name 	varchar(128) NOT NULL," +
-                        "link 	varchar(128) NOT NULL," +
-                        "display varchar(1) NOT NULL," +
+                    "storage_files (" +
+                    "id 	int NOT NULL AUTO_INCREMENT," +
+                    "name 	varchar(128) NOT NULL," +
+                    "link 	varchar(128) NOT NULL," +
+                    "display varchar(1) NOT NULL," +
                     "PRIMARY KEY (id)" +
                     ");";
 
-    public static final String REMOVE_FILE_FROM_SOURCE =
-            "DELETE FROM file_table " +
-            "WHERE id=?";
-
     //perform safe check for dups
-    public static final String INSERT_SOURCE_FILE =
-            "INSERT INTO source_files (" +
+    public static final String INSERT_FILE_TO_STORAGE =
+            "INSERT INTO storage_files (" +
                 "name, " +
                 "link," +
                 "display ) " +
             "VALUES(?,?,?) ";
 
-    public static final String IS_SOURCE_FILE_EXISTS =
-            "SELECT COUNT(id) " +
-            "FROM source_files " +
-            "WHERE name=? AND link=?";
 
-    public static final String GET_AVAILABLE_SOURCE_FILES =
+    public static final String GET_AVAILABLE_STORAGE_FILES =
             "SELECT id,name,link " +
-            "FROM source_files " +
+            "FROM storage_files " +
             "WHERE display=1";
 }

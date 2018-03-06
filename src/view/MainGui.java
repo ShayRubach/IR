@@ -2,6 +2,7 @@ package view;
 
 import annotations.A;
 import controller.AppController;
+import model.ParserUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +43,7 @@ public class MainGui {
         initButtons();
         initButtonListeners();
         initComboxBoxes();
+        initComboxBoxesListeners();
 
         }
 
@@ -82,6 +84,35 @@ public class MainGui {
 
     }
 
+    public void initComboxBoxesListeners(){
+
+        jcbDocNameResults.addActionListener(e -> {
+            if(jcbDocNameResults.getSelectedIndex() > 1){
+                //TODO: load the results?
+
+            }
+        });
+
+        jcbAddDoc.addActionListener(e -> {
+            if(jcbAddDoc.getSelectedIndex() > 1){
+                System.out.println("bla");
+                btnAddDoc.setEnabled(true);
+            }
+            else
+                btnAddDoc.setEnabled(false);
+
+        });
+
+        jcbRemoveDoc.addActionListener(e -> {
+            if(jcbRemoveDoc.getSelectedIndex() > 1){
+                btnRemoveDoc.setEnabled(true);
+            }
+            else
+                btnRemoveDoc.setEnabled(false);
+
+        });
+    }
+
     private void initButtonListeners() {
 
         //Login/Logout button:
@@ -98,9 +129,9 @@ public class MainGui {
 
                 jcbAddDoc.setEnabled(false);
                 jcbRemoveDoc.setEnabled(false);
-
-                btnRemoveDoc.setEnabled(false);
-                btnAddDoc.setEnabled(false);
+//
+//                btnRemoveDoc.setEnabled(false);
+//                btnAddDoc.setEnabled(false);
             }
             else {
                 //logged as visitor
@@ -118,8 +149,9 @@ public class MainGui {
                     jcbAddDoc.setEnabled(true);
                     jcbRemoveDoc.setEnabled(true);
 
-                    btnRemoveDoc.setEnabled(true);
-                    btnAddDoc.setEnabled(true);
+//                    btnRemoveDoc.setEnabled(true);
+//                    btnAddDoc.setEnabled(true);
+                    loadDbToApp();
 
                 }
                 else {
@@ -131,6 +163,19 @@ public class MainGui {
             }
             return;
         });
+
+
+        btnAddDoc.addActionListener(e -> {
+
+
+
+        });
+
+
+        btnRemoveDoc.addActionListener(e -> {
+
+        });
+
 
 
         //Search button:
@@ -157,14 +202,19 @@ public class MainGui {
 
     //TODO: implement this and keep the logic in gui
     @A.DBOperation
-    public void loadDbToApp() throws SQLException {
+    public void loadDbToApp()  {
+
+        String fixedSourceString = null;
+        String delim = appCtrl.getDb().DELIM;
         //load db here
 
         //get all available source files and display them on associated combo box:
         String[] docList = appCtrl.getAvailableSourceFiles();
+
         defaultComboBoxHeader(jcbAddDoc,"Document");
 
         for(String doc : docList){
+            //doc = doc.substring(0,doc.length()-4);
             jcbAddDoc.addItem(doc);
         }
 

@@ -14,16 +14,14 @@ public class appDemo {
         String sourceFilesPath  = "./source_files";
 
         MainGui         mainGui = new MainGui();
-        DatabaseUtil dbInfo = new DatabaseUtil(sourceFilesPath,localStoragePath);
+        DatabaseUtil    dbInfo  = new DatabaseUtil(sourceFilesPath,localStoragePath);
         AppController   appCtrl = new AppController(mainGui,dbInfo);
 
 
         try {
             appCtrl.connect();
-            appCtrl.createTable(QueryUtil.CREATE_FILE_TABLE);
+            appCtrl.createTable(QueryUtil.CREATE_STORAGE_FILES_TABLE);
             appCtrl.createTable(QueryUtil.CREATE_INDEX_TABLE);
-            appCtrl.tagAllSourceFiles();
-            appCtrl.getGui().loadDbToApp();
 
         }
         catch (ClassNotFoundException e) {
@@ -34,5 +32,6 @@ public class appDemo {
             e2.printStackTrace();
             System.out.println("SQL Exception.");
         }
+
     }
 }
