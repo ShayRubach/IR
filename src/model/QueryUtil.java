@@ -30,6 +30,9 @@ public class QueryUtil {
                 "display ) " +
             "VALUES(?,?,?) ";
 
+    public static final String GET_DOC_ID_BY_LINK =
+            "SELECT id FROM storage_files " +
+                    "WHERE link=?";
 
     public static final String GET_AVAILABLE_STORAGE_FILES =
             "SELECT id,name,link " +

@@ -2,9 +2,12 @@ package model;
 
 import annotations.A;
 
+import javax.management.Query;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DatabaseUtil {
 
@@ -143,5 +146,35 @@ public class DatabaseUtil {
 
     public void setSourceFilesPath(String sourceFilesPath) {
         this.sourceFilesPath = sourceFilesPath;
+    }
+
+    public int addFileToStorage(String fileName) throws FileNotFoundException, SQLException {
+        int docId;
+
+        //this will be the new link to the file on the local storage dir:
+        String linkToFile = getLocalStoragePath() + "/" +fileName;
+
+        //add file to db
+        pStmt = conn.prepareStatement(QueryUtil.INSERT_FILE_TO_STORAGE);
+        pStmt.setString(1,fileName);
+        pStmt.setString(2,linkToFile);
+        pStmt.setString(3,"1");     //dispay = true
+        pStmt.executeUpdate();
+
+        pStmt = conn.prepareStatement(QueryUtil.GET_DOC_ID_BY_LINK);
+        pStmt.setString(1,linkToFile);
+        rs = pStmt.executeQuery();
+        rs.next();
+        docId = rs.getInt(1);
+
+        //move the file to the local storage
+        moveFile(fileName,getSourceFilesPath(),getLocalStoragePath());
+
+        return docId;
+    }
+
+    public void moveFile(String fileName,String src,String dst) {
+        File file = new File(src + "/" + fileName);
+        file.renameTo(new File(dst + "/" + fileName));
     }
 }

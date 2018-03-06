@@ -4,13 +4,14 @@ import model.DatabaseUtil;
 import model.ParserUtil;
 import view.MainGui;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 public class AppController {
 
     private MainGui      gui;
     private DatabaseUtil db;
-    private ParserUtil parser = new ParserUtil();
+    private ParserUtil parser;
 
 
     public AppController(MainGui gui, DatabaseUtil db) {
@@ -21,24 +22,6 @@ public class AppController {
         //pass the gui a reference to this ctrlr (mvc)
         getGui().setAppCtrl(this);
     }
-
-    public DatabaseUtil getDb() {
-        return db;
-    }
-
-    public MainGui getGui() {
-        return gui;
-    }
-
-    public void setGui(MainGui gui) {
-        this.gui = gui;
-    }
-
-    public void setDb(DatabaseUtil db) {
-        this.db = db;
-    }
-
-
 
     public boolean isLoggedAsAdmin() {
         return db.isLoggedAsAdmin();
@@ -69,30 +52,40 @@ public class AppController {
         return db.getAvailableSourceFiles(db.getSourceFilesPath());
     }
 
-    public String parseSourceNameAndId(String sourceFile, String delim) {
-        return parser.parseSourceNameAndId(sourceFile, delim);
+    public void attachParser(ParserUtil parser){
+        this.parser = parser;
+    }
+
+    public void addFileToStorage(String fileName) throws FileNotFoundException, SQLException {
+        int docId = db.addFileToStorage(fileName);
+
+        parser.indexFile(docId,fileName,db);
+
     }
 
 
 
 
 
+    public ParserUtil getParser() {
+        return parser;
+    }
 
+    public DatabaseUtil getDb() {
+        return db;
+    }
 
+    public MainGui getGui() {
+        return gui;
+    }
 
+    public void setGui(MainGui gui) {
+        this.gui = gui;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    public void setDb(DatabaseUtil db) {
+        this.db = db;
+    }
 
 
 }

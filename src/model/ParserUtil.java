@@ -1,41 +1,49 @@
 package model;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ParserUtil {
 
-
+    private ArrayList<String> stopList = new ArrayList<>();
+    private String stopListPath = null;
 
     public ParserUtil(){}
+    public ParserUtil(String stopListPath) throws FileNotFoundException {
+        setStopListPath(stopListPath);
+        createStopList();
+    }
+
+    public void createStopList() throws FileNotFoundException {
+        Scanner itr = new Scanner(new File(stopListPath));
+        while(itr.hasNextLine()){
+            stopList.add(itr.next());
+        }
+
+    }
+
+    public void indexFile(int docId, String fileName, DatabaseUtil db) throws FileNotFoundException {
+        //TODO: use the db to upload the index table
 
 
-    /*
-    parse this string: { 1 $ Shay - A Song $ C:/Shay/Shay - A Song.mp3 $ 0 }
-    doc id = 1
-    doc name = Shay - A Song
-    doc link = C:/Shay/Shay - A Song.mp3
-    display = 0 (false, do not display)
-    $ = delimiter
-     */
-    public String parseSourceNameAndId(String unfixedString, String delim){
+        //Scanner itr = new Scanner(new File(db.getSourceFilesPath() +"/"+fileName));
 
-        int delimPos;
-        String docId,docName;
-
-        delimPos = unfixedString.indexOf(delim);
-        docId = unfixedString.substring(0,delimPos);
-        unfixedString = unfixedString.substring(delimPos+1);
-
-        delimPos = unfixedString.indexOf(delim);
-        docName = unfixedString.substring(0,delimPos);
-
-
-        return docName + "("+docId+")";
     }
 
 
 
 
+
+
+
+
+
+
+    public void setStopListPath(String stopListPath) {
+        this.stopListPath = stopListPath;
+    }
 
 }

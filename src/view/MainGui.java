@@ -6,6 +6,7 @@ import model.ParserUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 public class MainGui {
@@ -95,7 +96,6 @@ public class MainGui {
 
         jcbAddDoc.addActionListener(e -> {
             if(jcbAddDoc.getSelectedIndex() > 1){
-                System.out.println("bla");
                 btnAddDoc.setEnabled(true);
             }
             else
@@ -166,7 +166,18 @@ public class MainGui {
 
 
         btnAddDoc.addActionListener(e -> {
-
+            //make sure some document is chosen
+            if(jcbAddDoc.getSelectedIndex() > 1){
+                String fileName = jcbAddDoc.getSelectedItem().toString();
+                try {
+                    appCtrl.addFileToStorage(fileName);
+                } catch (FileNotFoundException e1) {
+                    System.out.println("addFileToStorage called. File not found");
+                    e1.printStackTrace();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
 
 
         });
