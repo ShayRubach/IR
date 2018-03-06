@@ -38,6 +38,8 @@ public class ParserUtil {
         String[] words;
         HashMap<String,Integer> appearances = new HashMap<>();
         Scanner itr = new Scanner(new File(db.getLocalStoragePath() + "/"+ fileName));
+
+        //parse and create a unique hashmap:
         while(itr.hasNextLine()){
             line = itr.nextLine();
             //remove all punctuations but the ' character :
@@ -45,6 +47,8 @@ public class ParserUtil {
             words = line.split(" ");
             mapWords(words,line,appearances);
         }
+
+        //upload unique records to db:
         for (String key : appearances.keySet() ) {
             db.pStmt = db.getConn().prepareStatement(QueryUtil.INSERT_NEW_INDEX_FILE);
             db.pStmt.setString(1,key);
@@ -53,13 +57,8 @@ public class ParserUtil {
             db.pStmt.execute();
         }
 
-
-        //TODO: use the db to upload file to the index table
-
-
-
     }
-    
+
     private void mapWords(String[] words, String line,HashMap<String,Integer> appearances) {
         for(String s : words){
             if(!appearances.containsKey(s))

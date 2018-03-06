@@ -63,6 +63,24 @@ public class DatabaseUtil {
         return docArrayList.toArray(new String[docArrayList.size()]);
     }
 
+    @A.DBOperation
+    public String[] getLocalStorageFiles() throws SQLException {
+        ArrayList<String> docArrayList = new ArrayList<>();
+        String docId,docName;
+
+        pStmt = conn.prepareStatement(QueryUtil.GET_LOCAL_STORAGE_FILES);
+        rs = pStmt.executeQuery();
+        while(rs.next()){
+            docId = String.valueOf(rs.getInt(1));   //docId
+            docName = rs.getString(2);              //docName
+            docArrayList.add(docName + " (" + docId + ")");
+        }
+
+        return docArrayList.toArray(new String[docArrayList.size()]);
+    }
+
+
+    @A.DBOperation
     public int addFileToStorage(String fileName) throws FileNotFoundException, SQLException {
         int docId;
 
@@ -98,6 +116,17 @@ public class DatabaseUtil {
     }
 
 
+    public void removeFileFromStorage(String fileAndId) throws SQLException {
+
+        //extract id and name from the concatenated string:
+        String id = fileAndId.substring(fileAndId.indexOf("(")+1,fileAndId.indexOf(")"));
+        String name = fileAndId.substring(0,fileAndId.indexOf("(")-1);
+
+        pStmt = conn.prepareStatement(QueryUtil.REMOVE_FILE_FROM_STORAGE);
+        pStmt.setInt(1,Integer.parseInt(id));
+        pStmt.execute();
+
+    }
 
     public boolean verifyAdminPass(String adminPass){
         return ADMIN_PASS.equals(adminPass);
@@ -110,6 +139,30 @@ public class DatabaseUtil {
     public boolean isLoggedAsAdmin(){
         return adminAccess;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public String getUser() {
         return user;
@@ -142,9 +195,6 @@ public class DatabaseUtil {
     public void setSourceFilesPath(String sourceFilesPath) {
         this.sourceFilesPath = sourceFilesPath;
     }
-
-
-
 
 
 }

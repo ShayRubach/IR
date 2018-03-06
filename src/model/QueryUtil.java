@@ -38,14 +38,17 @@ public class QueryUtil {
                 "appears ) " +
             "VALUES(?,?,?) ";
 
-
+    public static final String REMOVE_FILE_FROM_STORAGE =
+            "UPDATE storage_files " +
+                    "SET display=0 " +
+                    "WHERE id=?";
 
     public static final String GET_DOC_ID_BY_LINK =
             "SELECT id FROM storage_files " +
                     "WHERE link=?";
 
-    public static final String GET_AVAILABLE_STORAGE_FILES =
-            "SELECT id,name,link " +
+    public static final String GET_LOCAL_STORAGE_FILES =
+            "SELECT id,name " +
             "FROM storage_files " +
             "WHERE display=1";
 }

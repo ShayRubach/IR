@@ -52,6 +52,10 @@ public class AppController {
         return db.getAvailableSourceFiles(db.getSourceFilesPath());
     }
 
+    public String[] getLocalStorageFiles() throws SQLException {
+        return db.getLocalStorageFiles();
+    }
+
     public void attachParser(ParserUtil parser){
         this.parser = parser;
     }
@@ -87,4 +91,7 @@ public class AppController {
     }
 
 
+    public void removeFileFromStorage(String fileAndId) throws SQLException {
+        db.removeFileFromStorage(fileAndId);
+    }
 }

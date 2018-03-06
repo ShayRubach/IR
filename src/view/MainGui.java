@@ -129,9 +129,7 @@ public class MainGui {
 
                 jcbAddDoc.setEnabled(false);
                 jcbRemoveDoc.setEnabled(false);
-//
-//                btnRemoveDoc.setEnabled(false);
-//                btnAddDoc.setEnabled(false);
+
             }
             else {
                 //logged as visitor
@@ -149,9 +147,12 @@ public class MainGui {
                     jcbAddDoc.setEnabled(true);
                     jcbRemoveDoc.setEnabled(true);
 
-//                    btnRemoveDoc.setEnabled(true);
-//                    btnAddDoc.setEnabled(true);
-                    loadDbToApp();
+                    try {
+                        loadDbToApp();
+                    } catch (SQLException e1) {
+                        System.out.println("loadDbToApp called. Could not load db.");
+                        e1.printStackTrace();
+                    }
 
                 }
                 else {
@@ -171,6 +172,8 @@ public class MainGui {
                 String fileName = jcbAddDoc.getSelectedItem().toString();
                 try {
                     appCtrl.addFileToStorage(fileName);
+                    loadDbToApp();
+                    jcbAddDoc.setSelectedIndex(0);
                 } catch (FileNotFoundException e1) {
                     System.out.println("addFileToStorage called. File not found");
                     e1.printStackTrace();
@@ -184,7 +187,18 @@ public class MainGui {
 
 
         btnRemoveDoc.addActionListener(e -> {
-
+            //make sure some document is chosen
+            if(jcbRemoveDoc.getSelectedIndex() > 1){
+                String fileAndId = jcbRemoveDoc.getSelectedItem().toString();
+                try {
+                    //exclude file on search results
+                    appCtrl.removeFileFromStorage(fileAndId);
+                    loadDbToApp();
+                    jcbRemoveDoc.setSelectedIndex(0);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
         });
 
 
@@ -213,22 +227,25 @@ public class MainGui {
 
     //TODO: implement this and keep the logic in gui
     @A.DBOperation
-    public void loadDbToApp()  {
+    public void loadDbToApp() throws SQLException {
 
+        String[] docList;
         String fixedSourceString = null;
         String delim = appCtrl.getDb().DELIM;
-        //load db here
 
         //get all available source files and display them on associated combo box:
-        String[] docList = appCtrl.getAvailableSourceFiles();
-
+        docList = appCtrl.getAvailableSourceFiles();
         defaultComboBoxHeader(jcbAddDoc,"Document");
-
         for(String doc : docList){
             //doc = doc.substring(0,doc.length()-4);
             jcbAddDoc.addItem(doc);
         }
 
+        //get all storage files and display them on associated combo box:
+        docList = appCtrl.getLocalStorageFiles();
+        defaultComboBoxHeader(jcbRemoveDoc,"Document");
+        for(String s: docList)
+            jcbRemoveDoc.addItem(s);
 
 
     }
