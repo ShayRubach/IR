@@ -59,18 +59,13 @@ public class ParserUtil {
     }
 
     private void mapWords(String[] words, String line,HashMap<String,Integer> appearances) {
-
         for(String s : words){
             if(!appearances.containsKey(s))
                 appearances.put(s,1);
             else
                 appearances.put(s,appearances.get(s)+1);
         }
-
-        if(appearances.containsKey("")){
-            appearances.remove("");
-        }
-
+        appearances.remove("");
     }
 
     //cleans string from any punctuation symbols
