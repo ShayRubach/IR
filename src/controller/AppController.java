@@ -6,6 +6,7 @@ import view.MainGui;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class AppController {
 
@@ -66,6 +67,9 @@ public class AppController {
 
     }
 
+    public ArrayList<String[]> search(String searchQuery) throws SQLException {
+        return parser.search(searchQuery,db);
+    }
 
 
 
@@ -94,4 +98,5 @@ public class AppController {
     public void removeFileFromStorage(String fileAndId) throws SQLException {
         db.removeFileFromStorage(fileAndId);
     }
+
 }

@@ -69,13 +69,60 @@ public class ParserUtil {
         appearances.remove("");
     }
 
-    //cleans string from any punctuation symbols
 
 
+    public ArrayList<String[]> search(String searchQuery, DatabaseUtil db) throws SQLException {
+        //TODO: parse the query for operators and remove punctuations
+        //String fixedLine = searchQuery.replaceAll("(?=[^a-zA-Z0-9])([^'])", " ").toLowerCase();
+        //fixedLine = fixedLine.split(" ");
+        //System.out.println(fixedLine);
+
+        ArrayList<String[]> recordsList = new ArrayList<>();
+        eliminateStopWords(searchQuery);
+
+        db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
+        db.pStmt.setString(1,searchQuery);
+        db.rs = db.pStmt.executeQuery();
+
+        while(db.rs.next()){
+            String[] record = {db.rs.getString(1),
+                    String.valueOf(db.rs.getInt(2)),
+                    String.valueOf(db.rs.getInt(3))};
+
+            recordsList.add(record);
+
+        }
+
+
+        return recordsList;
+        //TODO: look in db with operator restrictions
+
+    }
+
+    private void eliminateStopWords(String searchQuery) {
+        int times = 0;
+        for (int i=0 ; i < searchQuery.length() ;i++){
+            if(searchQuery.charAt(i) == '"'){
+                ++times;
+            }
+        }
+
+    }
 
 
     public void setStopListPath(String stopListPath) {
         this.stopListPath = stopListPath;
     }
+
+
+
+
+
+
+
+
+
+
+
 
 }

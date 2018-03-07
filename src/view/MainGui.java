@@ -5,16 +5,18 @@ import controller.AppController;
 import model.ParserUtil;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MainGui {
 
     private AppController   appCtrl;
 
     private JPanel mainPanel;
-    private JTextArea taFullDocContent;
     private JTable tableIndexDocResults;
     private JComboBox jcbDocNameResults;
     private JTextField tfSearchLine;
@@ -28,7 +30,10 @@ public class MainGui {
     private JLabel lblAppName;
     private JLabel lblLoggedAs;
     private JLabel lblSystemMsg;
+    private JScrollPane jspDocResTable;
+    private JTextArea taFullDocContent;
     private JFrame mainFrame;
+    private DefaultTableModel modelIndexDocResults;
 
 
     public static final String LOG_OUT = "Log Out";
@@ -45,9 +50,27 @@ public class MainGui {
         initButtonListeners();
         initComboxBoxes();
         initComboxBoxesListeners();
+        initTables();
 
         }
 
+    private void initTables() {
+        final String[] tbIndexDocResColumns = {"Word","Doc Id","Appearances"};
+        modelIndexDocResults = new DefaultTableModel(null,tbIndexDocResColumns);
+        tableIndexDocResults.setBackground(new Color(255,255,255));
+        tableIndexDocResults.setModel(modelIndexDocResults);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+
+        tableIndexDocResults.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        tableIndexDocResults.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        tableIndexDocResults.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+
+    }
+
+    private void resetTableRecords(){
+        modelIndexDocResults.setRowCount(0);
+    }
 
     private void initMainFrame() {
         mainFrame = new JFrame("IR System - by team_pwnz (c) ");
@@ -90,7 +113,12 @@ public class MainGui {
         jcbDocNameResults.addActionListener(e -> {
             if(jcbDocNameResults.getSelectedIndex() > 1){
                 //TODO: load the results?
+                if(jcbDocNameResults.getSelectedIndex() > 1){
 
+                }
+                else{
+                    jcbDocNameResults.setSelectedIndex(0);
+                }
             }
         });
 
@@ -166,6 +194,8 @@ public class MainGui {
         });
 
 
+        //TODO: add a re-add an already hidden document
+        //TODO: turn jcbAddDoc into JList for group selection of documents
         btnAddDoc.addActionListener(e -> {
             //make sure some document is chosen
             if(jcbAddDoc.getSelectedIndex() > 1){
@@ -185,7 +215,7 @@ public class MainGui {
 
         });
 
-
+        //TODO: turn jcbRemoveDoc into JList for group selection of documents
         btnRemoveDoc.addActionListener(e -> {
             //make sure some document is chosen
             if(jcbRemoveDoc.getSelectedIndex() > 1){
@@ -206,14 +236,34 @@ public class MainGui {
         //Search button:
         btnSearch.addActionListener(e -> {
 
-            //get search terms and make a toLowerCase()
-            //parse line
-            //detect operator
+            //TODO: search event handling
+            ArrayList<String[]> records = new ArrayList<>();
+            if(/* some validation on string */ true){
+                String searchQuery = getTfSearchLine().getText().toString();
+                try {
+                    defaultComboBoxHeader(jcbDocNameResults,"Document");
+                    records = appCtrl.search(searchQuery);
+
+                    resetTableRecords();
+                    loadRecordsIntoTable(records);
+
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
 
         });
 
 
 
+
+    }
+
+    private void loadRecordsIntoTable(ArrayList<String[]> records) {
+        for(String[] record : records){
+            modelIndexDocResults.addRow(record);
+        }
 
     }
 
@@ -225,7 +275,7 @@ public class MainGui {
         }
     }
 
-    //TODO: implement this and keep the logic in gui
+
     @A.DBOperation
     public void loadDbToApp() throws SQLException {
 
@@ -302,7 +352,7 @@ public class MainGui {
         this.lblSystemMsg.setText(lblSystemMsg);
     }
 
-
-
-
+    public JTextField getTfSearchLine() {
+        return tfSearchLine;
+    }
 }
