@@ -3,11 +3,11 @@ package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ParserUtil {
@@ -72,16 +72,39 @@ public class ParserUtil {
 
 
     public ArrayList<String[]> search(String searchQuery, DatabaseUtil db) throws SQLException {
-        //TODO: parse the query for operators and remove punctuations
-        //String fixedLine = searchQuery.replaceAll("(?=[^a-zA-Z0-9])([^'])", " ").toLowerCase();
-        //fixedLine = fixedLine.split(" ");
-        //System.out.println(fixedLine);
+        //TODO: remove punctuations
 
-        if(searchQuery.contains("\""));
-            stackSearchQuery(searchQuery);
+        //convert the query holder to string[] incase we need to handle multiple terms:
+        String[] multipleTermsQuery = {searchQuery};
 
-        ArrayList<String[]> recordsList = new ArrayList<>();
-        eliminateStopWords(searchQuery);
+        ArrayList<String[]> recordsList = new ArrayList<>();        //will holder all records we get as results
+
+        if(!searchQuery.contains("\"")) {
+            searchQuery = eliminateStopWords(searchQuery,db);
+            System.out.println(searchQuery);
+        }
+        else {
+            searchQuery = handleOperatorQuotation(searchQuery);
+            multipleTermsQuery = searchQuery.split(" ");
+        }
+
+        //TODO: handle | operator
+        if(searchQuery.contains("|"))
+            handleOperatorOr(searchQuery);
+
+        //TODO: handle & operator
+        if(searchQuery.contains("&"))
+            handleOperatorAnd(searchQuery);
+
+        //TODO: handle () operator
+        if(searchQuery.contains("(") && searchQuery.contains(")"))
+            handleOperatorParanthesis(searchQuery);
+
+
+
+
+        //TODO:eliminate stop words which aren't between quotation marks
+
 
         db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
         db.pStmt.setString(1,searchQuery);
@@ -94,8 +117,7 @@ public class ParserUtil {
                     db.rs.getString(5),                 //name
                     db.rs.getString(6)};                //link
 
-
-        recordsList.add(record);
+            recordsList.add(record);
 
         }
 
@@ -105,18 +127,60 @@ public class ParserUtil {
 
     }
 
-    //combine all words in the " " boundaries into 1 single phrase
-    private void stackSearchQuery(String searchQuery) {
 
+    //combine all words in the " " boundaries into 1 single phrase
+    private String handleOperatorQuotation(String searchQuery) {
+        int posStart = searchQuery.indexOf("\"");
+        int posEnd = searchQuery.substring(posStart+1).indexOf("\"");
+        return searchQuery.substring(posStart+1,posEnd+1);
     }
 
-    private void eliminateStopWords(String searchQuery) {
-        int times = 0;
-        for (int i=0 ; i < searchQuery.length() ;i++){
-            if(searchQuery.charAt(i) == '"'){
-                ++times;
+    private void handleOperatorParanthesis(String searchQuery) {
+    }
+
+    private void handleOperatorAnd(String searchQuery) {
+    }
+
+    private void handleOperatorOr(String searchQuery) {
+    }
+
+
+
+    private String eliminateStopWords(String searchQuery, DatabaseUtil db) {
+
+        String[] split = searchQuery.split(" ");
+        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> stopList = new ArrayList<>();
+
+
+        try {
+            Scanner itr = new Scanner(new File(stopListPath));
+
+            //convert to list
+            for(String s : split)
+                list.add(s);
+
+            while(itr.hasNext()){
+                stopList.add(itr.next().toString());
+            }
+
+            //remove all stop words:
+            for(int i = 0 ; i < list.size() ; ++i) {
+                for(int j = 0 ; j < stopList.size() ; ++j)
+                    list.remove(stopList.get(j));
             }
         }
+        catch (FileNotFoundException e) {
+            System.out.println("eliminateStopWords called. cant find the stop list file");
+            e.printStackTrace();
+        }
+
+        //build new string without stop words
+        StringBuilder sb = new StringBuilder();
+        for(String s: list)
+            sb.append(s + " ");
+
+        return sb.substring(0,sb.length()-1);  //cut last space
 
     }
 

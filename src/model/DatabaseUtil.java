@@ -22,6 +22,8 @@ public class DatabaseUtil {
 
     private String localStoragePath;
     private String sourceFilesPath;
+    private String stopListPath;
+
 
 
     private String user = "root";
@@ -128,6 +130,8 @@ public class DatabaseUtil {
 
     }
 
+
+
     public boolean verifyAdminPass(String adminPass){
         return ADMIN_PASS.equals(adminPass);
     }
@@ -196,5 +200,7 @@ public class DatabaseUtil {
         this.sourceFilesPath = sourceFilesPath;
     }
 
-
+    public String getStopListPath() {
+        return stopListPath;
+    }
 }

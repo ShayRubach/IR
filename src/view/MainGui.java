@@ -150,8 +150,7 @@ public class MainGui {
 
     private void displayFileContent(String path) throws FileNotFoundException {
         Scanner itr = new Scanner(new File(path));
-        String line = null;
-        String word = null;
+        String line,word;
         StringBuilder fullFileContent = new StringBuilder();
         ArrayList<Integer> pos = new ArrayList<>();
 
@@ -160,28 +159,27 @@ public class MainGui {
             fullFileContent.append(line.toLowerCase() + "\n");
             taFullDocContent.setText(taFullDocContent.getText() + "\n" + line);
 
-            //TODO: change this to get word from another soruce (already parsed) and not the raw text from input
-            word = tfSearchLine.getText();
-
             //get all word positions in line to later be highlighted:
 
 
         }
+        //TODO: change this to get word from another soruce (already parsed) and not the raw text from input
+        word = removePunctuation(tfSearchLine.getText());
+
         pos = getWordPositions(pos,word,fullFileContent);
-        System.out.println(pos);
-        System.out.println(fullFileContent);
 
         //TODO: highlight the word here - do not forget multiple words case
-        highlightInTextArea(taFullDocContent,word,line,pos);
+        highlightInTextArea(taFullDocContent,word,pos);
 
     }
 
-    private void highlightInTextArea(JTextArea taFullDocContent, String phrase, String line, ArrayList<Integer> pos) {
+    private String removePunctuation(String word) {
+        return word.replaceAll("(?=[^a-zA-Z0-9])([^'])", "");
+    }
+
+    private void highlightInTextArea(JTextArea taFullDocContent, String phrase, ArrayList<Integer> pos) {
         Highlighter highlighter = taFullDocContent.getHighlighter();
         Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.yellow);
-
-        //int posStart ;
-        //int posEnd = posStart + phrase.length();
 
         for(Integer posStart : pos) {
             //System.out.println("phrase:"+phrase + "," + "line:"+line + ":" + posStart+","+posEnd);
