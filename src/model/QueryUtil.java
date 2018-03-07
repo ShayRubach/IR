@@ -53,7 +53,9 @@ public class QueryUtil {
             "WHERE display=1";
 
     public static final String GET_DOCS_BY_TERM =
-            "SELECT * FROM index_files " +
+            "SELECT * FROM index_files,storage_files " +
                     "WHERE word=? " +
+                    "AND doc_id=id " +
+                    "AND display=1 " +
                     "ORDER BY appears DESC";
         }

@@ -2,15 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="104346fc-7a21-476b-b94c-604f91a98855" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/out/production/IR/controller/AppController.class" afterPath="$PROJECT_DIR$/out/production/IR/controller/AppController.class" />
       <change beforePath="$PROJECT_DIR$/out/production/IR/model/ParserUtil.class" afterPath="$PROJECT_DIR$/out/production/IR/model/ParserUtil.class" />
       <change beforePath="$PROJECT_DIR$/out/production/IR/model/QueryUtil.class" afterPath="$PROJECT_DIR$/out/production/IR/model/QueryUtil.class" />
       <change beforePath="$PROJECT_DIR$/out/production/IR/view/MainGui.class" afterPath="$PROJECT_DIR$/out/production/IR/view/MainGui.class" />
       <change beforePath="$PROJECT_DIR$/src/controller/AppController.java" afterPath="$PROJECT_DIR$/src/controller/AppController.java" />
-      <change beforePath="$PROJECT_DIR$/src/model/ParserUtil.java" afterPath="$PROJECT_DIR$/src/model/ParserUtil.java" />
       <change beforePath="$PROJECT_DIR$/src/model/QueryUtil.java" afterPath="$PROJECT_DIR$/src/model/QueryUtil.java" />
-      <change beforePath="$PROJECT_DIR$/src/view/MainGui.form" afterPath="$PROJECT_DIR$/src/view/MainGui.form" />
       <change beforePath="$PROJECT_DIR$/src/view/MainGui.java" afterPath="$PROJECT_DIR$/src/view/MainGui.java" />
     </list>
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.685925">
+    <splitter split-orientation="horizontal" split-proportion="0.53657037">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="appDemo.java" pinned="false" current-in-tab="false">
@@ -65,28 +62,45 @@
           <file leaf-file-name="MainGui.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/view/MainGui.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="379">
-                  <caret line="312" column="0" lean-forward="true" selection-start-line="312" selection-start-column="0" selection-end-line="312" selection-end-column="0" />
+                <state relative-caret-position="436">
+                  <caret line="178" column="38" lean-forward="true" selection-start-line="178" selection-start-column="38" selection-end-line="178" selection-end-column="38" />
                   <folding>
                     <element signature="imports" expanded="true" />
                     <element signature="e#2401#2402#0" expanded="true" />
                     <element signature="e#2452#2453#0" expanded="true" />
-                    <element signature="e#10182#10183#0" expanded="true" />
-                    <element signature="e#10220#10221#0" expanded="true" />
                     <element signature="e#10256#10257#0" expanded="true" />
-                    <element signature="e#10288#10289#0" expanded="true" />
-                    <element signature="e#10341#10342#0" expanded="true" />
-                    <element signature="e#10379#10380#0" expanded="true" />
-                    <element signature="e#10417#10418#0" expanded="true" />
-                    <element signature="e#10451#10452#0" expanded="true" />
-                    <element signature="e#10505#10506#0" expanded="true" />
-                    <element signature="e#10558#10559#0" expanded="true" />
-                    <element signature="e#10597#10598#0" expanded="true" />
+                    <element signature="e#10294#10295#0" expanded="true" />
+                    <element signature="e#10330#10331#0" expanded="true" />
+                    <element signature="e#10362#10363#0" expanded="true" />
+                    <element signature="e#10415#10416#0" expanded="true" />
+                    <element signature="e#10453#10454#0" expanded="true" />
+                    <element signature="e#10491#10492#0" expanded="true" />
+                    <element signature="e#10525#10526#0" expanded="true" />
+                    <element signature="e#10579#10580#0" expanded="true" />
                     <element signature="e#10632#10633#0" expanded="true" />
-                    <element signature="e#10688#10689#0" expanded="true" />
-                    <element signature="e#10743#10744#0" expanded="true" />
-                    <element signature="e#10786#10787#0" expanded="true" />
-                    <element signature="e#10821#10822#0" expanded="true" />
+                    <element signature="e#10671#10672#0" expanded="true" />
+                    <element signature="e#10706#10707#0" expanded="true" />
+                    <element signature="e#10762#10763#0" expanded="true" />
+                    <element signature="e#10817#10818#0" expanded="true" />
+                    <element signature="e#10860#10861#0" expanded="true" />
+                    <element signature="e#10895#10896#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="AppController.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/controller/AppController.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="455">
+                  <caret line="74" column="23" lean-forward="true" selection-start-line="74" selection-start-column="23" selection-end-line="74" selection-end-column="23" />
+                  <folding>
+                    <element signature="method#AppController#0;class#AppController#0" expanded="false" />
+                    <element signature="method#connect#0;class#AppController#0" expanded="false" />
+                    <element signature="method#createTable#0;class#AppController#0" expanded="false" />
+                    <element signature="method#verifyAdminPass#0;class#AppController#0" expanded="false" />
+                    <element signature="e#1207#1208#0" expanded="true" />
+                    <element signature="e#1281#1282#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -95,8 +109,8 @@
           <file leaf-file-name="DatabaseUtil.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/model/DatabaseUtil.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="438">
-                  <caret line="133" column="0" lean-forward="true" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
+                <state relative-caret-position="302">
+                  <caret line="118" column="16" lean-forward="false" selection-start-line="118" selection-start-column="16" selection-end-line="118" selection-end-column="16" />
                   <folding>
                     <element signature="imports" expanded="true" />
                     <element signature="e#3320#3321#0" expanded="true" />
@@ -141,23 +155,6 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="AppController.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/controller/AppController.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="413">
-                  <caret line="69" column="37" lean-forward="false" selection-start-line="69" selection-start-column="31" selection-end-line="69" selection-end-column="37" />
-                  <folding>
-                    <element signature="method#AppController#0;class#AppController#0" expanded="false" />
-                    <element signature="method#connect#0;class#AppController#0" expanded="false" />
-                    <element signature="method#createTable#0;class#AppController#0" expanded="false" />
-                    <element signature="method#verifyAdminPass#0;class#AppController#0" expanded="false" />
-                    <element signature="e#1166#1167#0" expanded="true" />
-                    <element signature="e#1240#1241#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
         </leaf>
       </split-first>
       <split-second>
@@ -165,8 +162,8 @@
           <file leaf-file-name="QueryUtil.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/model/QueryUtil.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="345">
-                  <caret line="32" column="33" lean-forward="true" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+                <state relative-caret-position="592">
+                  <caret line="58" column="35" lean-forward="false" selection-start-line="58" selection-start-column="35" selection-end-line="58" selection-end-column="35" />
                   <folding />
                 </state>
               </provider>
@@ -186,10 +183,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getAv</find>
-      <find>initButtonLis</find>
-      <find>bla</find>
-      <find>addFileTo</find>
       <find>rs =</find>
       <find>innocent</find>
       <find>doesn't</find>
@@ -216,6 +209,10 @@
       <find>Record</find>
       <find>records</find>
       <find>initTables</find>
+      <find>btnAddDoc</find>
+      <find>addDocum</find>
+      <find>appCtrl.removeFileFromStorage</find>
+      <find>btnLoginAsAdmin</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -236,11 +233,11 @@
         <option value="$PROJECT_DIR$/src/view/StopList.txt" />
         <option value="$PROJECT_DIR$/src/model/DatabaseUtil.java" />
         <option value="$PROJECT_DIR$/src/view/HelpWindow.form" />
-        <option value="$PROJECT_DIR$/src/model/QueryUtil.java" />
-        <option value="$PROJECT_DIR$/src/controller/AppController.java" />
         <option value="$PROJECT_DIR$/src/model/ParserUtil.java" />
-        <option value="$PROJECT_DIR$/src/view/MainGui.java" />
         <option value="$PROJECT_DIR$/src/view/MainGui.form" />
+        <option value="$PROJECT_DIR$/src/controller/AppController.java" />
+        <option value="$PROJECT_DIR$/src/view/MainGui.java" />
+        <option value="$PROJECT_DIR$/src/model/QueryUtil.java" />
       </list>
     </option>
   </component>
@@ -449,7 +446,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="79191000" />
+    <option name="totallyTimeSpent" value="80197000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
@@ -464,7 +461,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17819707" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17190775" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5115304" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -618,22 +615,22 @@
             <element signature="imports" expanded="true" />
             <element signature="e#2401#2402#0" expanded="true" />
             <element signature="e#2452#2453#0" expanded="true" />
-            <element signature="e#10182#10183#0" expanded="true" />
-            <element signature="e#10220#10221#0" expanded="true" />
             <element signature="e#10256#10257#0" expanded="true" />
-            <element signature="e#10288#10289#0" expanded="true" />
-            <element signature="e#10341#10342#0" expanded="true" />
-            <element signature="e#10379#10380#0" expanded="true" />
-            <element signature="e#10417#10418#0" expanded="true" />
-            <element signature="e#10451#10452#0" expanded="true" />
-            <element signature="e#10505#10506#0" expanded="true" />
-            <element signature="e#10558#10559#0" expanded="true" />
-            <element signature="e#10597#10598#0" expanded="true" />
+            <element signature="e#10294#10295#0" expanded="true" />
+            <element signature="e#10330#10331#0" expanded="true" />
+            <element signature="e#10362#10363#0" expanded="true" />
+            <element signature="e#10415#10416#0" expanded="true" />
+            <element signature="e#10453#10454#0" expanded="true" />
+            <element signature="e#10491#10492#0" expanded="true" />
+            <element signature="e#10525#10526#0" expanded="true" />
+            <element signature="e#10579#10580#0" expanded="true" />
             <element signature="e#10632#10633#0" expanded="true" />
-            <element signature="e#10688#10689#0" expanded="true" />
-            <element signature="e#10743#10744#0" expanded="true" />
-            <element signature="e#10786#10787#0" expanded="true" />
-            <element signature="e#10821#10822#0" expanded="true" />
+            <element signature="e#10671#10672#0" expanded="true" />
+            <element signature="e#10706#10707#0" expanded="true" />
+            <element signature="e#10762#10763#0" expanded="true" />
+            <element signature="e#10817#10818#0" expanded="true" />
+            <element signature="e#10860#10861#0" expanded="true" />
+            <element signature="e#10895#10896#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -734,8 +731,8 @@
             <element signature="method#connect#0;class#AppController#0" expanded="false" />
             <element signature="method#createTable#0;class#AppController#0" expanded="false" />
             <element signature="method#verifyAdminPass#0;class#AppController#0" expanded="false" />
-            <element signature="e#1166#1167#0" expanded="true" />
-            <element signature="e#1240#1241#0" expanded="true" />
+            <element signature="e#1207#1208#0" expanded="true" />
+            <element signature="e#1281#1282#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -777,22 +774,22 @@
             <element signature="imports" expanded="true" />
             <element signature="e#2401#2402#0" expanded="true" />
             <element signature="e#2452#2453#0" expanded="true" />
-            <element signature="e#10182#10183#0" expanded="true" />
-            <element signature="e#10220#10221#0" expanded="true" />
             <element signature="e#10256#10257#0" expanded="true" />
-            <element signature="e#10288#10289#0" expanded="true" />
-            <element signature="e#10341#10342#0" expanded="true" />
-            <element signature="e#10379#10380#0" expanded="true" />
-            <element signature="e#10417#10418#0" expanded="true" />
-            <element signature="e#10451#10452#0" expanded="true" />
-            <element signature="e#10505#10506#0" expanded="true" />
-            <element signature="e#10558#10559#0" expanded="true" />
-            <element signature="e#10597#10598#0" expanded="true" />
+            <element signature="e#10294#10295#0" expanded="true" />
+            <element signature="e#10330#10331#0" expanded="true" />
+            <element signature="e#10362#10363#0" expanded="true" />
+            <element signature="e#10415#10416#0" expanded="true" />
+            <element signature="e#10453#10454#0" expanded="true" />
+            <element signature="e#10491#10492#0" expanded="true" />
+            <element signature="e#10525#10526#0" expanded="true" />
+            <element signature="e#10579#10580#0" expanded="true" />
             <element signature="e#10632#10633#0" expanded="true" />
-            <element signature="e#10688#10689#0" expanded="true" />
-            <element signature="e#10743#10744#0" expanded="true" />
-            <element signature="e#10786#10787#0" expanded="true" />
-            <element signature="e#10821#10822#0" expanded="true" />
+            <element signature="e#10671#10672#0" expanded="true" />
+            <element signature="e#10706#10707#0" expanded="true" />
+            <element signature="e#10762#10763#0" expanded="true" />
+            <element signature="e#10817#10818#0" expanded="true" />
+            <element signature="e#10860#10861#0" expanded="true" />
+            <element signature="e#10895#10896#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -845,8 +842,8 @@
             <element signature="method#connect#0;class#AppController#0" expanded="false" />
             <element signature="method#createTable#0;class#AppController#0" expanded="false" />
             <element signature="method#verifyAdminPass#0;class#AppController#0" expanded="false" />
-            <element signature="e#1166#1167#0" expanded="true" />
-            <element signature="e#1240#1241#0" expanded="true" />
+            <element signature="e#1207#1208#0" expanded="true" />
+            <element signature="e#1281#1282#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -954,10 +951,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/ParserUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="87" column="21" lean-forward="true" selection-start-line="87" selection-start-column="21" selection-end-line="87" selection-end-column="21" />
+          <folding>
+            <element signature="e#3543#3544#0" expanded="true" />
+            <element signature="e#3591#3592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/HelpWindow.form">
+      <provider selected="true" editor-type-id="ui-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view/MainGui.form">
+      <provider selected="true" editor-type-id="ui-designer">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/model/DatabaseUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="438">
-          <caret line="133" column="0" lean-forward="true" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
+        <state relative-caret-position="302">
+          <caret line="118" column="16" lean-forward="false" selection-start-line="118" selection-start-column="16" selection-end-line="118" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3320#3321#0" expanded="true" />
@@ -990,38 +1008,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/controller/AppController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="69" column="37" lean-forward="false" selection-start-line="69" selection-start-column="31" selection-end-line="69" selection-end-column="37" />
+        <state relative-caret-position="455">
+          <caret line="74" column="23" lean-forward="true" selection-start-line="74" selection-start-column="23" selection-end-line="74" selection-end-column="23" />
           <folding>
             <element signature="method#AppController#0;class#AppController#0" expanded="false" />
             <element signature="method#connect#0;class#AppController#0" expanded="false" />
             <element signature="method#createTable#0;class#AppController#0" expanded="false" />
             <element signature="method#verifyAdminPass#0;class#AppController#0" expanded="false" />
-            <element signature="e#1166#1167#0" expanded="true" />
-            <element signature="e#1240#1241#0" expanded="true" />
+            <element signature="e#1207#1208#0" expanded="true" />
+            <element signature="e#1281#1282#0" expanded="true" />
           </folding>
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/ParserUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="87" column="21" lean-forward="true" selection-start-line="87" selection-start-column="21" selection-end-line="87" selection-end-column="21" />
-          <folding>
-            <element signature="e#3543#3544#0" expanded="true" />
-            <element signature="e#3591#3592#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/HelpWindow.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/view/MainGui.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/QueryUtil.java">
@@ -1034,28 +1031,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/view/MainGui.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="312" column="0" lean-forward="true" selection-start-line="312" selection-start-column="0" selection-end-line="312" selection-end-column="0" />
+        <state relative-caret-position="436">
+          <caret line="178" column="38" lean-forward="true" selection-start-line="178" selection-start-column="38" selection-end-line="178" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2401#2402#0" expanded="true" />
             <element signature="e#2452#2453#0" expanded="true" />
-            <element signature="e#10182#10183#0" expanded="true" />
-            <element signature="e#10220#10221#0" expanded="true" />
             <element signature="e#10256#10257#0" expanded="true" />
-            <element signature="e#10288#10289#0" expanded="true" />
-            <element signature="e#10341#10342#0" expanded="true" />
-            <element signature="e#10379#10380#0" expanded="true" />
-            <element signature="e#10417#10418#0" expanded="true" />
-            <element signature="e#10451#10452#0" expanded="true" />
-            <element signature="e#10505#10506#0" expanded="true" />
-            <element signature="e#10558#10559#0" expanded="true" />
-            <element signature="e#10597#10598#0" expanded="true" />
+            <element signature="e#10294#10295#0" expanded="true" />
+            <element signature="e#10330#10331#0" expanded="true" />
+            <element signature="e#10362#10363#0" expanded="true" />
+            <element signature="e#10415#10416#0" expanded="true" />
+            <element signature="e#10453#10454#0" expanded="true" />
+            <element signature="e#10491#10492#0" expanded="true" />
+            <element signature="e#10525#10526#0" expanded="true" />
+            <element signature="e#10579#10580#0" expanded="true" />
             <element signature="e#10632#10633#0" expanded="true" />
-            <element signature="e#10688#10689#0" expanded="true" />
-            <element signature="e#10743#10744#0" expanded="true" />
-            <element signature="e#10786#10787#0" expanded="true" />
-            <element signature="e#10821#10822#0" expanded="true" />
+            <element signature="e#10671#10672#0" expanded="true" />
+            <element signature="e#10706#10707#0" expanded="true" />
+            <element signature="e#10762#10763#0" expanded="true" />
+            <element signature="e#10817#10818#0" expanded="true" />
+            <element signature="e#10860#10861#0" expanded="true" />
+            <element signature="e#10895#10896#0" expanded="true" />
           </folding>
         </state>
       </provider>

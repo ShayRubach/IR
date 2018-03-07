@@ -201,7 +201,7 @@ public class MainGui {
             if(jcbAddDoc.getSelectedIndex() > 1){
                 String fileName = jcbAddDoc.getSelectedItem().toString();
                 try {
-                    appCtrl.addFileToStorage(fileName);
+                    addFileToStorage(fileName);
                     loadDbToApp();
                     jcbAddDoc.setSelectedIndex(0);
                 } catch (FileNotFoundException e1) {
@@ -222,7 +222,7 @@ public class MainGui {
                 String fileAndId = jcbRemoveDoc.getSelectedItem().toString();
                 try {
                     //exclude file on search results
-                    appCtrl.removeFileFromStorage(fileAndId);
+                    removeFileFromStorage(fileAndId);
                     loadDbToApp();
                     jcbRemoveDoc.setSelectedIndex(0);
                 } catch (SQLException e1) {
@@ -303,23 +303,23 @@ public class MainGui {
 
     @A.AdminOperation
     @A.DBOperation
-    public boolean removeDocument(int docID){
-        boolean res = false;
-        if(/* some code */ true ){
+    public void removeFileFromStorage(String fileAndId) throws SQLException {
 
+        if(/* some code */ true ){
+            appCtrl.removeFileFromStorage(fileAndId);
         }
-        return res;
+
     }
 
 
     @A.AdminOperation
     @A.DBOperation
-    public boolean addDocument(int docID){
-        boolean res = false;
-        if(/* some code */ true ){
+    public void addFileToStorage(String fileName) throws FileNotFoundException, SQLException {
 
+        if(/* some code */ true ){
+            appCtrl.addFileToStorage(fileName);
         }
-        return res;
+
     }
 
 

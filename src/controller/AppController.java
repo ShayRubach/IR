@@ -1,5 +1,6 @@
 package controller;
 
+import annotations.A;
 import model.DatabaseUtil;
 import model.ParserUtil;
 import view.MainGui;
@@ -49,30 +50,40 @@ public class AppController {
         db.setAdminAccess(access);
     }
 
+    @A.DBOperation
     public String[] getAvailableSourceFiles()  {
         return db.getAvailableSourceFiles(db.getSourceFilesPath());
     }
 
+    @A.DBOperation
     public String[] getLocalStorageFiles() throws SQLException {
         return db.getLocalStorageFiles();
     }
 
-    public void attachParser(ParserUtil parser){
-        this.parser = parser;
-    }
 
+    @A.DBOperation
+    @A.AdminOperation
     public void addFileToStorage(String fileName) throws FileNotFoundException, SQLException {
         int docId = db.addFileToStorage(fileName);
         parser.indexFile(docId,fileName,db);
 
     }
 
+    @A.DBOperation
+    @A.AdminOperation
+    public void removeFileFromStorage(String fileAndId) throws SQLException {
+        db.removeFileFromStorage(fileAndId);
+    }
+
+    @A.Parsing
     public ArrayList<String[]> search(String searchQuery) throws SQLException {
         return parser.search(searchQuery,db);
     }
 
 
-
+    public void attachParser(ParserUtil parser){
+        this.parser = parser;
+    }
 
     public ParserUtil getParser() {
         return parser;
@@ -95,8 +106,6 @@ public class AppController {
     }
 
 
-    public void removeFileFromStorage(String fileAndId) throws SQLException {
-        db.removeFileFromStorage(fileAndId);
-    }
+
 
 }
