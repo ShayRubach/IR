@@ -2,15 +2,21 @@ package view;
 
 import annotations.A;
 import controller.AppController;
-import model.ParserUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import java.awt.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainGui {
 
@@ -34,6 +40,7 @@ public class MainGui {
     private JTextArea taFullDocContent;
     private JFrame mainFrame;
     private DefaultTableModel modelIndexDocResults;
+    private ArrayList<String[]> records;
 
 
     public static final String LOG_OUT = "Log Out";
@@ -44,7 +51,7 @@ public class MainGui {
 
     private HelpWindow helpWindow = new HelpWindow();
 
-    public MainGui() {
+    public MainGui() throws FileNotFoundException {
         initMainFrame();
         initButtons();
         initButtonListeners();
@@ -108,16 +115,18 @@ public class MainGui {
 
     }
 
-    public void initComboxBoxesListeners(){
+    public void initComboxBoxesListeners() throws FileNotFoundException{
 
         jcbDocNameResults.addActionListener(e -> {
             if(jcbDocNameResults.getSelectedIndex() > 1){
-                //TODO: load the results?
-                if(jcbDocNameResults.getSelectedIndex() > 1){
+                String path = fetchFilePath(jcbDocNameResults.getSelectedItem().toString());
+                try {
+                    //clear any content displayed before
+                    taFullDocContent.setText("");
+                    displayFileContent(path);
 
-                }
-                else{
-                    jcbDocNameResults.setSelectedIndex(0);
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -128,7 +137,6 @@ public class MainGui {
             }
             else
                 btnAddDoc.setEnabled(false);
-
         });
 
         jcbRemoveDoc.addActionListener(e -> {
@@ -137,9 +145,80 @@ public class MainGui {
             }
             else
                 btnRemoveDoc.setEnabled(false);
-
         });
     }
+
+    private void displayFileContent(String path) throws FileNotFoundException {
+        Scanner itr = new Scanner(new File(path));
+        String line = null;
+        String word = null;
+        StringBuilder fullFileContent = new StringBuilder();
+        ArrayList<Integer> pos = new ArrayList<>();
+
+        while(itr.hasNextLine()){
+            line = itr.nextLine();
+            fullFileContent.append(line.toLowerCase() + "\n");
+            taFullDocContent.setText(taFullDocContent.getText() + "\n" + line);
+
+            //TODO: change this to get word from another soruce (already parsed) and not the raw text from input
+            word = tfSearchLine.getText();
+
+            //get all word positions in line to later be highlighted:
+
+
+        }
+        pos = getWordPositions(pos,word,fullFileContent);
+        System.out.println(pos);
+        System.out.println(fullFileContent);
+
+        //TODO: highlight the word here - do not forget multiple words case
+        highlightInTextArea(taFullDocContent,word,line,pos);
+
+    }
+
+    private void highlightInTextArea(JTextArea taFullDocContent, String phrase, String line, ArrayList<Integer> pos) {
+        Highlighter highlighter = taFullDocContent.getHighlighter();
+        Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.yellow);
+
+        //int posStart ;
+        //int posEnd = posStart + phrase.length();
+
+        for(Integer posStart : pos) {
+            //System.out.println("phrase:"+phrase + "," + "line:"+line + ":" + posStart+","+posEnd);
+            try {
+                highlighter.addHighlight(posStart+1, posStart+phrase.length()+1, painter);
+
+            } catch (BadLocationException e) {
+                System.out.println("highlightInTextArea called. bad location exception occurred.");
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private ArrayList<Integer> getWordPositions(ArrayList<Integer> pos, String word, StringBuilder line) {
+
+        //regex to match exact phrase/word in line
+        Matcher m = Pattern.compile("(?=(\\b"+ word + "\\b))").matcher(line);   // the \b is for exact word boundaries
+
+        while (m.find())
+            pos.add(m.start());
+
+        return pos;
+    }
+
+    private String fetchFilePath(String s) {
+        String path = null;
+        String id = s.substring(s.indexOf("(")+1,s.indexOf(")"));
+
+        for(String[] record : records){
+            if(record[1].equals(id))
+                path = record[4];
+        }
+
+        return path;
+    }
+
 
     private void initButtonListeners() {
 
@@ -237,16 +316,21 @@ public class MainGui {
         btnSearch.addActionListener(e -> {
 
             //TODO: search event handling
-            ArrayList<String[]> records = new ArrayList<>();
+            defaultComboBoxHeader(jcbDocNameResults,"Result");
             if(/* some validation on string */ true){
                 String searchQuery = getTfSearchLine().getText().toString();
                 try {
-                    defaultComboBoxHeader(jcbDocNameResults,"Document");
-                    records = appCtrl.search(searchQuery);
 
+
+                    records = appCtrl.search(searchQuery);
                     resetTableRecords();
                     loadRecordsIntoTable(records);
 
+                    //TODO: show the found docs in jcb
+                    displayDocsInComboBox(records);
+
+                    //clear any content displayed before
+                    taFullDocContent.setText("");
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
@@ -258,6 +342,15 @@ public class MainGui {
 
 
 
+    }
+
+    private void displayDocsInComboBox(ArrayList<String[]> records) {
+        //get id and name
+
+        for(String[] record : records){
+
+            jcbDocNameResults.addItem(record[3] + " (" + record[1] +")");
+        }
     }
 
     private void loadRecordsIntoTable(ArrayList<String[]> records) {

@@ -58,4 +58,14 @@ public class QueryUtil {
                     "AND doc_id=id " +
                     "AND display=1 " +
                     "ORDER BY appears DESC";
-        }
+    }
+
+//    public static final String GET_DOCS_BY_TERM =
+//            "SELECT *,name " +
+//                    "FROM index_files " +
+//                    "JOIN storage_files " +
+//                    "WHERE word=? " +
+//                    "AND doc_id=id " +
+//                    "AND display=1 " +
+//                    "ORDER BY appears DESC";
+//}

@@ -77,6 +77,9 @@ public class ParserUtil {
         //fixedLine = fixedLine.split(" ");
         //System.out.println(fixedLine);
 
+        if(searchQuery.contains("\""));
+            stackSearchQuery(searchQuery);
+
         ArrayList<String[]> recordsList = new ArrayList<>();
         eliminateStopWords(searchQuery);
 
@@ -85,17 +88,25 @@ public class ParserUtil {
         db.rs = db.pStmt.executeQuery();
 
         while(db.rs.next()){
-            String[] record = {db.rs.getString(1),
-                    String.valueOf(db.rs.getInt(2)),
-                    String.valueOf(db.rs.getInt(3))};
+            String[] record = {db.rs.getString(1),      //word
+                    String.valueOf(db.rs.getInt(2)),    //id
+                    String.valueOf(db.rs.getInt(3)),    //appearances
+                    db.rs.getString(5),                 //name
+                    db.rs.getString(6)};                //link
 
-            recordsList.add(record);
+
+        recordsList.add(record);
 
         }
 
 
         return recordsList;
         //TODO: look in db with operator restrictions
+
+    }
+
+    //combine all words in the " " boundaries into 1 single phrase
+    private void stackSearchQuery(String searchQuery) {
 
     }
 
