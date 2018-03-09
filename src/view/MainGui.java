@@ -38,6 +38,7 @@ public class MainGui {
     private JLabel lblSystemMsg;
     private JScrollPane jspDocResTable;
     private JTextArea taFullDocContent;
+    private JTextArea textArea1;
     private JFrame mainFrame;
     private DefaultTableModel modelIndexDocResults;
     private ArrayList<String[]> records;
@@ -309,6 +310,7 @@ public class MainGui {
         });
 
 
+        //TODO: make search lunch with key storke (Enter)
 
         //Search button:
         btnSearch.addActionListener(e -> {
@@ -317,11 +319,13 @@ public class MainGui {
             defaultComboBoxHeader(jcbDocNameResults,"Result");
             if(/* some validation on string */ true){
                 String searchQuery = getTfSearchLine().getText().toString();
+
+                resetTableRecords();
                 try {
 
-
                     records = appCtrl.search(searchQuery);
-                    resetTableRecords();
+
+                    //TODO: add a 3-line summery below the Jtable for each doc..
                     loadRecordsIntoTable(records);
 
                     //TODO: show the found docs in jcb

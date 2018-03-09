@@ -1,9 +1,9 @@
 Supported Operation:
 ====================
 
-- <keyword_1> && <keyword_2> ... && <keyword_N>
-- <keyword_1> || <keyword_2> ... || <keyword_N>
-- ( <keyword_1> && <keyword_2> ) || <keyword_N>
+- <keyword_1> & <keyword_2> ... & <keyword_N>
+- <keyword_1> | <keyword_2> ... | <keyword_N>
+- ( <keyword_1> & <keyword_2> ) | <keyword_N>
 - "<keyword_1>"
 
 

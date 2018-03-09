@@ -14,6 +14,7 @@ public class ParserUtil {
 
     private ArrayList<String> stopList = new ArrayList<>();
     private String stopListPath = null;
+    private OperatorHandler opHandler = new OperatorHandler();
 
     //private static final Pattern UNWANTED_SYMBOLS = Pattern.compile("(?:--|[\\[\\]{}(),.+/\\\\])");
     private static final Pattern UNWANTED_SYMBOLS = Pattern.compile("/[^A-Za-z0-9]/g");
@@ -74,36 +75,54 @@ public class ParserUtil {
     public ArrayList<String[]> search(String searchQuery, DatabaseUtil db) throws SQLException {
         //TODO: remove punctuations
 
-        //convert the query holder to string[] incase we need to handle multiple terms:
+        //convert the query holder to string[] in case we need to handle multiple terms:
         String[] multipleTermsQuery = {searchQuery};
 
         ArrayList<String[]> recordsList = new ArrayList<>();        //will holder all records we get as results
 
-        if(!searchQuery.contains("\"")) {
-            searchQuery = eliminateStopWords(searchQuery,db);
-            System.out.println(searchQuery);
-        }
-        else {
-            searchQuery = handleOperatorQuotation(searchQuery);
-            multipleTermsQuery = searchQuery.split(" ");
-        }
-
-        //TODO: handle | operator
-        if(searchQuery.contains("|"))
-            handleOperatorOr(searchQuery);
-
-        //TODO: handle & operator
-        if(searchQuery.contains("&"))
-            handleOperatorAnd(searchQuery);
-
-        //TODO: handle () operator
-        if(searchQuery.contains("(") && searchQuery.contains(")"))
-            handleOperatorParanthesis(searchQuery);
-
-
-
+        //remove useless spaces:
+        searchQuery = removeUselessSpaces(searchQuery);
+        //searchQuery = searchQuery.trim().replaceAll(" ","");
+        //searchQuery  = searchQuery.trim().replaceAll(" +", " ");
 
         //TODO:eliminate stop words which aren't between quotation marks
+        searchQuery = eliminateStopWords(searchQuery,db);
+
+
+        opHandler.countOperators(searchQuery);
+
+
+
+//        if(!searchQuery.contains("\"")) {
+//            searchQuery = eliminateStopWords(searchQuery,db);
+//            System.out.println(searchQuery);
+//        }
+//        else {
+//            searchQuery = handleOperatorQuotation(searchQuery);
+//            multipleTermsQuery = searchQuery.split(" ");
+//        }
+//
+//
+//        //TODO: handle | operator
+//        if(searchQuery.contains("!"))
+//            handleOperatorOr(searchQuery);
+//
+//        //TODO: handle | operator
+//        if(searchQuery.contains("|"))
+//            handleOperatorOr(searchQuery);
+//
+//        //TODO: handle & operator
+//        if(searchQuery.contains("&"))
+//            handleOperatorAnd(searchQuery);
+//
+//        //TODO: handle () operator
+//        if(searchQuery.contains("(") && searchQuery.contains(")"))
+//            handleOperatorParanthesis(searchQuery);
+
+
+
+
+
 
 
         db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
@@ -123,10 +142,14 @@ public class ParserUtil {
 
 
         return recordsList;
-        //TODO: look in db with operator restrictions
+
 
     }
 
+    private String removeUselessSpaces(String searchQuery) {
+        searchQuery  = searchQuery.trim().replaceAll(" +", " ");
+        return searchQuery;
+    }
 
     //combine all words in the " " boundaries into 1 single phrase
     private String handleOperatorQuotation(String searchQuery) {
@@ -144,9 +167,58 @@ public class ParserUtil {
     private void handleOperatorOr(String searchQuery) {
     }
 
-
-
     private String eliminateStopWords(String searchQuery, DatabaseUtil db) {
+
+        ArrayList<Integer> posList = new ArrayList<>();
+
+        //look for quotation marks
+        for(int j = 0 ; j < searchQuery.length() ; ++j) {
+            if(searchQuery.charAt(j) == '\"'){
+                posList.add(j);
+            }
+        }
+
+        System.out.println(searchQuery);
+
+        //odd number of parenthesis, illegal.
+        if(!posList.isEmpty() && posList.size()%2 != 0){
+            return searchQuery;
+        }
+
+        try {
+            Scanner itr = new Scanner(new File(stopListPath));
+
+
+            while(itr.hasNext()){
+                String word = itr.next();
+
+                if(posList.isEmpty()){
+                    searchQuery = searchQuery.replaceAll(word,"");
+                    break;
+                }
+
+
+                int wordPos = searchQuery.indexOf(word);
+                if(wordPos != -1){
+                    for(int i=0 ; i < posList.size() - 1 ; i+=2 ){
+                        if(wordPos > posList.get(i) && wordPos < posList.get(i+1))
+                            searchQuery = searchQuery.replaceAll(word,"");
+                    }
+
+                }
+            }
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("eliminateStopWords called. cant find the stop list file");
+            e.printStackTrace();
+        }
+
+
+        return searchQuery;
+    }
+
+
+    private String eliminateStopWords2(String searchQuery, DatabaseUtil db) {
 
         String[] split = searchQuery.split(" ");
         ArrayList<String> list = new ArrayList<>();
@@ -191,6 +263,35 @@ public class ParserUtil {
 
 
 
+
+    class OperatorHandler {
+        public int opQuotations = 0;
+        public int opParenthasis = 0;
+        public int opOr = 0;
+        public int opAnd = 0;
+
+        // in simple terms: < <operatorType,OperatorsCount>, List<posStart,posEnd> >
+        public HashMap<HashMap<String,Integer>,ArrayList<HashMap<Integer,Integer>>> ops = new HashMap<>();
+
+
+        public OperatorHandler(){}
+
+
+        public void countOperators(String searchQuery){
+            for (int i = 0 ; i < searchQuery.length() ; ++i){
+                ;
+            }
+        }
+
+
+        public void clean() {
+            opQuotations=0;
+            opParenthasis=0;
+            opOr=0;
+            opAnd=0;
+        }
+
+    }
 
 
 
