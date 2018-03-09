@@ -1,5 +1,3 @@
-and
-or
 to
 the
 if
@@ -9,9 +7,6 @@ when
 why
 is
 it
-you
-he
-she
 i
 am
 a
