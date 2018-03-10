@@ -169,6 +169,7 @@ public class MainGui {
         ArrayList<Integer> pos = new ArrayList<>();
 
 
+        taFullDocContent.setText("");
         while(itr.hasNextLine()){
             line = itr.nextLine();
             fullFileContent.append(line.toLowerCase() + "\n");
@@ -179,12 +180,17 @@ public class MainGui {
 
         }
         //TODO: change this to get word from another soruce (already parsed) and not the raw text from input
-        word = removePunctuation(tfSearchLine.getText());
+        //word = removePunctuation(tfSearchLine.getText());
 
-        pos = getWordPositions(pos,word,fullFileContent);
 
-        //TODO: highlight the word here - do not forget multiple words case
-        highlightInTextArea(taFullDocContent,word,pos);
+        for (int i = 0; i < tableIndexDocResults.getRowCount() ; i++) {
+            word = tableIndexDocResults.getValueAt(i,0).toString();
+            pos = getWordPositions(pos,word,fullFileContent);
+
+            //TODO: highlight the word here - do not forget multiple words case
+            highlightInTextArea(taFullDocContent,word,pos);
+        }
+
 
     }
 
@@ -376,7 +382,7 @@ public class MainGui {
                     loadRecordsIntoTable(records);
                     displayDocSummery(records);
                     displayDocsInComboBox(records);
-
+                    clearFullDocHighlights(taFullDocContent);
                     //clear any content displayed before
                     taFullDocContent.setText("");
                 } catch (SQLException e1) {
@@ -395,6 +401,14 @@ public class MainGui {
                 e1.printStackTrace();
             }
         });
+    }
+
+
+
+    public void clearFullDocHighlights(JTextArea textArea) {
+        Highlighter highlighter = textArea.getHighlighter();
+        Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.white);
+        highlighter.removeAllHighlights();
     }
 
     private void displayDocsInComboBox(ArrayList<String[]> records) {
