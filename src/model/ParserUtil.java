@@ -87,6 +87,7 @@ public class ParserUtil {
         opHandler.countOperators(searchQuery);
 
 
+
         System.out.println(searchQuery);
         //TODO: handle ! operator
         if(searchQuery.contains("!"))
@@ -202,40 +203,13 @@ public class ParserUtil {
     private void handleOperatorParentheses(String searchQuery) {
     }
 
-    private ArrayList<String[]> handleOperatorAnd(String searchQuery, DatabaseUtil db) throws SQLException {
 
-        System.out.println("handleOperatorAnd: called.\t searchQuery="+searchQuery);
 
-        ArrayList<String[]> recordsList = new ArrayList<>();
-        StringBuilder leftWord= new StringBuilder();
-        StringBuilder rightWord= new StringBuilder();
-
-        getOperands(leftWord,rightWord,searchQuery);
-
-        db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOC_BY_TERM_AND_TERM);
-        db.pStmt.setString(1,leftWord.toString());
-        db.pStmt.setString(2,rightWord.toString());
-        db.pStmt.setString(3,leftWord.toString());
-        db.pStmt.setString(4,rightWord.toString());
-        db.rs = db.pStmt.executeQuery();
-
-        while(db.rs.next()){
-            String[] record = {db.rs.getString(1),      //word
-                    String.valueOf(db.rs.getInt(2)),    //id
-                    String.valueOf(db.rs.getInt(3)),    //appearances
-                    db.rs.getString(5),                 //name
-                    db.rs.getString(6)};                //link
-            recordsList.add(record);
-        }
-
-        return recordsList;
-    }
-
-    private void getOperands(StringBuilder leftWord, StringBuilder rightWord, String searchQuery) {
+    private void getOperands(StringBuilder leftWord, StringBuilder rightWord, String searchQuery,String operator) {
         String[] tempQuery = searchQuery.split(" ");
 
         for (int i = 0; i < tempQuery.length ; i++) {
-            if(tempQuery[i].equals("&") && tempQuery[i+1] != null){
+            if(tempQuery[i].equals(operator) && tempQuery[i+1] != null){
                 leftWord.append(tempQuery[i-1]);
                 rightWord.append(tempQuery[i+1]);
                 break;
@@ -244,7 +218,37 @@ public class ParserUtil {
 
     }
 
-    private ArrayList<String[]> handleOperatorOr(String searchQuery, DatabaseUtil db) {
+    private ArrayList<String[]> handleOperatorAnd(String searchQuery, DatabaseUtil db) throws SQLException {
+
+        System.out.println("handleOperatorAnd: called.\t searchQuery="+searchQuery);
+
+        ArrayList<String[]> recordsList = new ArrayList<>();
+        StringBuilder leftWord= new StringBuilder();
+        StringBuilder rightWord= new StringBuilder();
+
+        getOperands(leftWord,rightWord,searchQuery,"&");
+        System.out.println("left: " + leftWord + "\tright: " + rightWord);
+
+        db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOC_BY_TERM_AND_TERM);
+        db.pStmt.setString(1,leftWord.toString());
+        db.pStmt.setString(2,rightWord.toString());
+        db.rs = db.pStmt.executeQuery();
+
+        while(db.rs.next()){
+            if(db.rs.getString(1).equals(rightWord.toString()) || db.rs.getString(1).equals(leftWord.toString())) {
+                String[] record = {db.rs.getString(1),      //word
+                        String.valueOf(db.rs.getInt(2)),    //id
+                        String.valueOf(db.rs.getInt(3)),    //appearances
+                        db.rs.getString(5),                 //name
+                        db.rs.getString(6)};                //link
+                recordsList.add(record);
+            }
+        }
+
+        return recordsList;
+    }
+
+    private ArrayList<String[]> handleOperatorOr(String searchQuery, DatabaseUtil db) throws SQLException {
 
         System.out.println("handleOperatorOr: called.\t searchQuery="+searchQuery);
 
@@ -252,11 +256,26 @@ public class ParserUtil {
         StringBuilder leftWord= new StringBuilder();
         StringBuilder rightWord= new StringBuilder();
 
-        getOperands(leftWord,rightWord,searchQuery);
+        getOperands(leftWord,rightWord,searchQuery,"|");
 
+        System.out.println("left: " + leftWord + "right: " + rightWord);
+        db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOC_BY_TERM_OR_TERM);
+        db.pStmt.setString(1,leftWord.toString());
+        db.pStmt.setString(2,rightWord.toString());
+        db.rs = db.pStmt.executeQuery();
 
+        while(db.rs.next()){
+            if(db.rs.getString(1).equals(rightWord.toString()) || db.rs.getString(1).equals(leftWord.toString())) {
+                String[] record = {db.rs.getString(1),      //word
+                        String.valueOf(db.rs.getInt(2)),    //id
+                        String.valueOf(db.rs.getInt(3)),    //appearances
+                        db.rs.getString(5),                 //name
+                        db.rs.getString(6)};                //link
+                recordsList.add(record);
+            }
+        }
 
-        return null;
+        return recordsList;
     }
 
     //restriction: the operator must be to the left of the operand

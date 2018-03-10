@@ -81,15 +81,25 @@ public class QueryUtil {
                     "AND doc_id=id AND display=1" ;
 
 
+    //bad logic
     public static final String GET_DOC_BY_TERM_AND_TERM =
+            "SELECT word,doc_id,appears,id,name,link FROM index_files " +
+            "JOIN storage_files ON storage_files.id=index_files.doc_id AND display=1 " +
+            "WHERE " +
+            "doc_id IN (SELECT doc_id FROM index_files WHERE word=?) " +
+            "AND " +
+            "doc_id IN (SELECT doc_id FROM index_files WHERE word=?)";
+
+
+    //bad logic
+    public static final String GET_DOC_BY_TERM_OR_TERM =
             "SELECT word,doc_id,appears,id,name,link FROM index_files " +
                     "JOIN storage_files ON storage_files.id=index_files.doc_id AND display=1 " +
                     "WHERE " +
                     "doc_id IN (SELECT doc_id FROM index_files WHERE word=?) " +
-                    "AND " +
-                    "doc_id IN (SELECT doc_id FROM index_files WHERE word=?) " +
-                    "AND " +
-                    "word=? or word=?";
+                    "OR " +
+                    "doc_id IN (SELECT doc_id FROM index_files WHERE word=?)";
+
 
     public static final String RESET_DB =
             "DROP TABLE IF EXISTS index_files,storage_files";
