@@ -12,6 +12,7 @@ import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -39,6 +40,7 @@ public class MainGui {
     private JScrollPane jspDocResTable;
     private JTextArea taFullDocContent;
     private JTextArea taDocSummery;
+    private JButton btnResetAppDb;
     private JFrame mainFrame;
     private DefaultTableModel modelIndexDocResults;
     private ArrayList<String[]> records;
@@ -370,6 +372,13 @@ public class MainGui {
 
 
 
+        btnResetAppDb.addActionListener(e -> {
+            try {
+                appCtrl.reset();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     private void displayDocsInComboBox(ArrayList<String[]> records) {
@@ -419,7 +428,6 @@ public class MainGui {
             jcbAddDoc.addItem(doc);
         }
 
-
         //get all storage files and display them on associated combo box:
         docList = appCtrl.getLocalStorageFiles();
         defaultComboBoxHeader(jcbRemoveDoc,"Document");
@@ -441,10 +449,7 @@ public class MainGui {
     @A.DBOperation
     public void addFileToStorage(String fileName) throws FileNotFoundException, SQLException {
 
-        if(/* some code */ true ){
-            appCtrl.addFileToStorage(fileName);
-        }
-
+        appCtrl.addFileToStorage(fileName);
     }
 
 

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DatabaseUtil {
 
@@ -142,6 +143,19 @@ public class DatabaseUtil {
         return adminAccess;
     }
 
+    public boolean isAlreadyInStorage(String fileName) {
+        System.out.println("isAlreadyInStorage called. file: " + fileName);
+        Scanner sc = null;
+        try {
+            sc = new Scanner(new File(getLocalStoragePath() + fileName));
+        }
+        catch (FileNotFoundException e){
+            return false;
+        }
+
+        sc.close();
+        return true;
+    }
 
 
 
@@ -217,5 +231,14 @@ public class DatabaseUtil {
 
         return docArrayList.toArray(new String[docArrayList.size()]);
 
+    }
+
+    public void setFileAvailable(String fileName) {
+        System.out.println("setFileAvailable called. file: " + fileName);
+    }
+
+    public void reset() throws SQLException {
+        pStmt =conn.prepareStatement(QueryUtil.RESET_DB);
+        pStmt.execute();
     }
 }

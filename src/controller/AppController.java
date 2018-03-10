@@ -64,8 +64,16 @@ public class AppController {
     @A.DBOperation
     @A.AdminOperation
     public void addFileToStorage(String fileName) throws FileNotFoundException, SQLException {
-        int docId = db.addFileToStorage(fileName);
-        parser.indexFile(docId,fileName,db);
+        if(false == db.isAlreadyInStorage(fileName)){
+            System.out.println(fileName + " is a new file. adding to storage.");
+            int docId = db.addFileToStorage(fileName);
+            parser.indexFile(docId,fileName,db);
+        }
+        else {
+            System.out.println(fileName + " is already in storage. set display=1");
+            db.setFileAvailable(fileName);
+        }
+
 
     }
 
@@ -112,5 +120,7 @@ public class AppController {
     }
 
 
-
+    public void reset() throws SQLException {
+        db.reset();
+    }
 }

@@ -200,6 +200,14 @@
           <text value="Documents Summery"/>
         </properties>
       </component>
+      <component id="4b6c3" class="javax.swing.JButton" binding="btnResetAppDb">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Reset Database (used in dev)"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>
