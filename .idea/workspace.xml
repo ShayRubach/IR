@@ -4,12 +4,6 @@
     <list default="true" id="104346fc-7a21-476b-b94c-604f91a98855" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change beforePath="$PROJECT_DIR$/out/production/IR/model/ParserUtil$OperatorHandler.class" afterPath="$PROJECT_DIR$/out/production/IR/model/ParserUtil$OperatorHandler.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/IR/model/ParserUtil.class" afterPath="$PROJECT_DIR$/out/production/IR/model/ParserUtil.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/IR/view/StopList.txt" afterPath="$PROJECT_DIR$/out/production/IR/view/StopList.txt" />
-      <change beforePath="$PROJECT_DIR$/src/annotations/A.java" afterPath="$PROJECT_DIR$/src/annotations/A.java" />
-      <change beforePath="$PROJECT_DIR$/src/model/ParserUtil.java" afterPath="$PROJECT_DIR$/src/model/ParserUtil.java" />
-      <change beforePath="$PROJECT_DIR$/src/view/StopList.txt" afterPath="$PROJECT_DIR$/src/view/StopList.txt" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -133,15 +127,27 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ParserUtil.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ParserUtil.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/ParserUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="445">
-              <caret line="241" column="37" lean-forward="true" selection-start-line="241" selection-start-column="37" selection-end-line="241" selection-end-column="37" />
+            <state relative-caret-position="305">
+              <caret line="234" column="54" lean-forward="true" selection-start-line="234" selection-start-column="54" selection-end-line="234" selection-end-column="54" />
               <folding>
-                <element signature="e#7789#7790#0" expanded="true" />
                 <element signature="e#7837#7838#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="51">
+                <caret line="3" column="81" lean-forward="true" selection-start-line="3" selection-start-column="81" selection-end-line="3" selection-end-column="81" />
+                <folding />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -243,11 +249,11 @@
         <option value="$PROJECT_DIR$/src/view/MainGui.form" />
         <option value="$PROJECT_DIR$/src/view/MainGui.java" />
         <option value="$PROJECT_DIR$/src/view/Help.txt" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/annotations/A.java" />
         <option value="$PROJECT_DIR$/src/view/StopList.txt" />
         <option value="$PROJECT_DIR$/src/model/KmpUtil.java" />
         <option value="$PROJECT_DIR$/src/model/ParserUtil.java" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -462,15 +468,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1520492623410</updated>
-      <workItem from="1520492624923" duration="30887000" />
+      <workItem from="1520492624923" duration="31111000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="133865000" />
+    <option name="totallyTimeSpent" value="134089000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -486,7 +493,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5115304" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21354167" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21354167" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32914045" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -722,7 +729,6 @@
         <state relative-caret-position="362">
           <caret line="56" column="60" lean-forward="true" selection-start-line="56" selection-start-column="60" selection-end-line="56" selection-end-column="60" />
           <folding>
-            <element signature="e#7789#7790#0" expanded="true" />
             <element signature="e#7837#7838#0" expanded="true" />
           </folding>
         </state>
@@ -902,17 +908,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="51">
-            <caret line="3" column="69" lean-forward="true" selection-start-line="3" selection-start-column="69" selection-end-line="3" selection-end-column="69" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/view/Help.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -1046,12 +1041,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/ParserUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
-          <caret line="241" column="37" lean-forward="true" selection-start-line="241" selection-start-column="37" selection-end-line="241" selection-end-column="37" />
+        <state relative-caret-position="305">
+          <caret line="234" column="54" lean-forward="true" selection-start-line="234" selection-start-column="54" selection-end-line="234" selection-end-column="54" />
           <folding>
-            <element signature="e#7789#7790#0" expanded="true" />
             <element signature="e#7837#7838#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="51">
+            <caret line="3" column="81" lean-forward="true" selection-start-line="3" selection-start-column="81" selection-end-line="3" selection-end-column="81" />
+            <folding />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
