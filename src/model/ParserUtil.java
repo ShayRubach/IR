@@ -6,10 +6,7 @@ import annotations.A;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ListIterator;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class ParserUtil {
@@ -109,24 +106,34 @@ public class ParserUtil {
             return handleOperatorQuotation(searchQuery,db);
 
 
-        db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
-        db.pStmt.setString(1,searchQuery);
-        db.rs = db.pStmt.executeQuery();
+        String words[] = removeDups(searchQuery.split(" "));
 
-        while(db.rs.next()){
-            String[] record = {db.rs.getString(1),      //word
-                    String.valueOf(db.rs.getInt(2)),    //id
-                    String.valueOf(db.rs.getInt(3)),    //appearances
-                    db.rs.getString(5),                 //name
-                    db.rs.getString(6)};                //link
+        for(String word : words){
+            System.out.println("word: " + word);
+            db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
+            db.pStmt.setString(1,word);
+            db.rs = db.pStmt.executeQuery();
 
-            recordsList.add(record);
+            while(db.rs.next()){
+                String[] record = {db.rs.getString(1),      //word
+                        String.valueOf(db.rs.getInt(2)),    //id
+                        String.valueOf(db.rs.getInt(3)),    //appearances
+                        db.rs.getString(5),                 //name
+                        db.rs.getString(6)};                //link
+
+                recordsList.add(record);
+            }
         }
 
 
         return recordsList;
 
 
+    }
+
+    private String[] removeDups(String[] words) {
+        words = new HashSet<String>(Arrays.asList(words)).toArray(new String[0]);
+        return words;
     }
 
     private String fixSpaces(String searchQuery) {
@@ -179,14 +186,12 @@ public class ParserUtil {
             }
         }
 
-        System.out.println("bla bla bla tempquery: " + tempQuery);
         for(String[] record : records){
             try {
                 Scanner itr = new Scanner(new File(record[4]));
                 while(itr.hasNextLine()){
                     String line = itr.nextLine();
                     if(line.trim().contains(tempQuery)){
-                        System.out.println("this line is good: " + line);
                         tempRecords.add(record);
                         break;
                     }
@@ -195,6 +200,9 @@ public class ParserUtil {
                 e.printStackTrace();
             }
         }
+
+
+
 
         //TODO: fix empty return val here. "something" is not working for some reason while "it" "a" and more works.
         return new ArrayList<>(tempRecords);
