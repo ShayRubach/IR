@@ -80,6 +80,12 @@ public class AppController {
         return parser.search(searchQuery,db);
     }
 
+    @A.DBOperation
+    @A.AdminOperation
+    public String[] getAvailableStorageFiles() throws SQLException {
+        return db.getAvailableStorageFiles(db.getLocalStoragePath());
+    }
+
 
     public void attachParser(ParserUtil parser){
         this.parser = parser;
@@ -104,7 +110,6 @@ public class AppController {
     public void setDb(DatabaseUtil db) {
         this.db = db;
     }
-
 
 
 

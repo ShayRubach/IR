@@ -2,12 +2,10 @@ package model;
 
 import annotations.A;
 
-import javax.management.Query;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class DatabaseUtil {
 
@@ -202,5 +200,22 @@ public class DatabaseUtil {
 
     public String getStopListPath() {
         return stopListPath;
+    }
+
+    public String[] getAvailableStorageFiles(String localStoragePath) throws SQLException {
+
+        ArrayList<String> docArrayList = new ArrayList<>();
+
+        pStmt = conn.prepareStatement(QueryUtil.GET_AVAILABLE_STORAGE_FILES);
+        rs = pStmt.executeQuery();
+        while(rs.next()){
+            String result = rs.getString(2) + " (" +
+                    String.valueOf(rs.getString(1)) + ")";
+            docArrayList.add(result);
+            System.out.println(result);
+        }
+
+        return docArrayList.toArray(new String[docArrayList.size()]);
+
     }
 }

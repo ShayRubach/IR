@@ -306,7 +306,9 @@ public class MainGui {
         });
 
 
-        //TODO: add a re-add an already hidden document
+        //TODO 00: add a re-add an already hidden document
+
+
         //TODO: turn jcbAddDoc into JList for group selection of documents
         btnAddDoc.addActionListener(e -> {
             //make sure some document is chosen
@@ -410,6 +412,14 @@ public class MainGui {
             jcbAddDoc.addItem(doc);
         }
 
+        //get removed docs back into add area
+        docList = appCtrl.getAvailableStorageFiles();
+        for(String doc : docList){
+            //doc = doc.substring(0,doc.length()-4);
+            jcbAddDoc.addItem(doc);
+        }
+
+
         //get all storage files and display them on associated combo box:
         docList = appCtrl.getLocalStorageFiles();
         defaultComboBoxHeader(jcbRemoveDoc,"Document");
@@ -423,11 +433,7 @@ public class MainGui {
     @A.AdminOperation
     @A.DBOperation
     public void removeFileFromStorage(String fileAndId) throws SQLException {
-
-        if(/* some code */ true ){
-            appCtrl.removeFileFromStorage(fileAndId);
-        }
-
+        appCtrl.removeFileFromStorage(fileAndId);
     }
 
 

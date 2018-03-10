@@ -52,6 +52,12 @@ public class QueryUtil {
                     "FROM storage_files " +
                     "WHERE display=1";
 
+    public static final String GET_AVAILABLE_STORAGE_FILES =
+            "SELECT id,name " +
+                    "FROM storage_files " +
+                    "WHERE display=0";
+
+
     public static final String GET_DOCS_BY_TERM =
             "SELECT * FROM index_files,storage_files " +
                     "WHERE word=? " +
