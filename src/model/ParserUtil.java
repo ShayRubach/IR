@@ -3,7 +3,6 @@ package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +74,7 @@ public class ParserUtil {
 
 
     public ArrayList<String[]> search(String searchQuery, DatabaseUtil db) throws SQLException {
-        //TODO: remove punctuations
+
 
         //convert the query holder to string[] in case we need to handle multiple terms:
         String[] multipleTermsQuery = {searchQuery};
@@ -83,43 +82,32 @@ public class ParserUtil {
         ArrayList<String[]> recordsList = new ArrayList<>();        //will holder all records we get as results
 
         //remove useless spaces:
-        searchQuery = removeUselessSpaces(searchQuery);
-        //searchQuery = searchQuery.trim().replaceAll(" ","");
-        //searchQuery  = searchQuery.trim().replaceAll(" +", " ");
-
-        //TODO:eliminate stop words which aren't between quotation marks
+        searchQuery = fixSpaces(searchQuery);
         searchQuery = eliminateStopWords(searchQuery,db);
-
-
         opHandler.countOperators(searchQuery);
 
 
+        System.out.println(searchQuery);
+        //TODO: handle ! operator
+        if(searchQuery.contains("!"))
+            return handleOperatorNot(searchQuery,db);
 
-//        if(!searchQuery.contains("\"")) {
-//            searchQuery = eliminateStopWords(searchQuery,db);
-//            System.out.println(searchQuery);
-//        }
-//        else {
-//            searchQuery = handleOperatorQuotation(searchQuery);
-//            multipleTermsQuery = searchQuery.split(" ");
-//        }
-//
-//
-//        //TODO: handle | operator
-//        if(searchQuery.contains("!"))
-//            handleOperatorOr(searchQuery);
-//
-//        //TODO: handle | operator
-//        if(searchQuery.contains("|"))
-//            handleOperatorOr(searchQuery);
-//
-//        //TODO: handle & operator
-//        if(searchQuery.contains("&"))
-//            handleOperatorAnd(searchQuery);
-//
-//        //TODO: handle () operator
-//        if(searchQuery.contains("(") && searchQuery.contains(")"))
-//            handleOperatorParanthesis(searchQuery);
+        //TODO: handle | operator
+        if(searchQuery.contains("|"))
+            handleOperatorOr(searchQuery);
+
+        //TODO: handle & operator
+        if(searchQuery.contains("&"))
+            handleOperatorAnd(searchQuery);
+
+        //TODO: handle () operator
+        if(searchQuery.contains("(") && searchQuery.contains(")"))
+            handleOperatorParentheses(searchQuery);
+
+
+
+
+
 
 
 
@@ -139,13 +127,22 @@ public class ParserUtil {
                     db.rs.getString(6)};                //link
 
             recordsList.add(record);
-
         }
 
 
         return recordsList;
 
 
+    }
+
+    private String fixSpaces(String searchQuery) {
+        //makes equal spaces between words and operators, e.g:
+        //turns->       word!   (another &"you")|phrase       into->       word ! (another & " you " ) | phrase
+        String[] operators = {"\\(","\\)","\\&","\\|","\\!","\\\""};
+        for(String op : operators)
+            searchQuery = searchQuery.trim().replaceAll(op," " + op + " ");
+
+        return removeUselessSpaces(searchQuery);
     }
 
     private String removeUselessSpaces(String searchQuery) {
@@ -202,7 +199,7 @@ public class ParserUtil {
         }
     }
 
-    private void handleOperatorParanthesis(String searchQuery) {
+    private void handleOperatorParentheses(String searchQuery) {
     }
 
     private void handleOperatorAnd(String searchQuery) {
@@ -210,6 +207,38 @@ public class ParserUtil {
 
     private void handleOperatorOr(String searchQuery) {
     }
+
+    //restriction: the operator must be to the left of the operand
+    private ArrayList<String[]> handleOperatorNot(String searchQuery, DatabaseUtil db) throws SQLException {
+        System.out.println("handleOperatorNot: called.\t searchQuery="+searchQuery);
+        ArrayList<String[]> recordsList = new ArrayList<>();
+        String[] tempQuery = searchQuery.split(" ");
+        String word = null;
+
+        for (int i = 0; i < tempQuery.length ; i++) {
+            if(tempQuery[i].equals("!") && tempQuery[i+1] != null){
+                word = tempQuery[i+1];
+                break;
+            }
+        }
+
+        db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOC_WITHOUT_TERM);
+        db.pStmt.setString(1,word);
+        db.rs = db.pStmt.executeQuery();
+
+        while(db.rs.next()){
+            String[] record = {db.rs.getString(1),      //word
+                    String.valueOf(db.rs.getInt(2)),    //id
+                    String.valueOf(db.rs.getInt(3)),    //appearances
+                    db.rs.getString(5),                 //name
+                    db.rs.getString(6)};                //link
+            recordsList.add(record);
+        }
+
+        return recordsList;
+
+    }
+
 
 
     private String eliminateStopWords(String searchQuery, DatabaseUtil db) {

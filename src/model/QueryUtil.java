@@ -70,6 +70,23 @@ public class QueryUtil {
                     "SET display=1 " +
                     "WHERE id=?";
 
+    public static final String GET_DOC_WITHOUT_TERM =
+            "SELECT word,doc_id,appears,id,name,link " +
+                    "FROM index_files,storage_files " +
+                    "WHERE doc_id NOT IN " +
+                    "   (SELECT doc_id " +
+                    "   FROM index_files " +
+                    "   WHERE word=?) " +
+                    "AND doc_id=id";
+
+    public static final String GET_DOC_WITHOUT_TERM2 =
+            "SELECT word,doc_id,appears,id,name,link " +
+                    "FROM index_files " +
+                    "JOIN storage_files " +
+                    "WHERE word != ? " +
+                    "ORDER BY appears DESC";
+
+
 
     public static final String RESET_DB =
             "DROP TABLE IF EXISTS index_files,storage_files";

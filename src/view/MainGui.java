@@ -113,6 +113,7 @@ public class MainGui {
         btnLoginAsAdmin.setText(LOG_IN);
         btnAddDoc.setEnabled(false);
         btnRemoveDoc.setEnabled(false);
+        btnResetAppDb.setEnabled(false);
     }
 
     public void initComboxBoxes(){
@@ -192,25 +193,35 @@ public class MainGui {
     }
 
     private void displayDocSummery(ArrayList<String[]> records) {
+
+        System.out.println("displayDocSummery: called.");
         taDocSummery.setText("");
         for(String[] record : records){
             try {
+                System.out.println("displayDocSummery: attempting to open: " + record[4] );
                 Scanner itr = new Scanner(new File(record[4]));
 
-                taDocSummery.setText(taDocSummery.getText() + record[3].substring(0,record[3].length()-4) + " : \n" );
-                taDocSummery.setText(taDocSummery.getText() + "===============================\n");
-                for(int i = 0 ; i < 3 && itr.hasNextLine() ; i++){
-                    String line = itr.nextLine();
-                    if(line.equals("") || line.equals('\n')) {
-                        --i;
-                        continue;
+                String fileNameWithoutExtension = record[3].substring(0,record[3].length()-4);
+
+                //if this doc is already summarized, do not display again.
+                if (!taDocSummery.getText().contains(fileNameWithoutExtension)) {
+                    taDocSummery.setText(taDocSummery.getText() + fileNameWithoutExtension + " : \n" );
+                    taDocSummery.setText(taDocSummery.getText() + "===============================\n");
+
+                    for(int i = 0 ; i < 3 && itr.hasNextLine() ; i++){
+                        String line = itr.nextLine();
+                        if(line.equals("") || line.equals('\n')) {
+                            --i;
+                            continue;
+                        }
+                        if(i == 2)
+                            line += " .....";
+                        taDocSummery.setText(taDocSummery.getText() + line + "\n");
                     }
-                    if(i == 2)
-                        line += " .....";
-                    taDocSummery.setText(taDocSummery.getText() + line + "\n");
+                    taDocSummery.setText(taDocSummery.getText() + "\n");
                 }
-                taDocSummery.setText(taDocSummery.getText() + "\n");
             } catch (FileNotFoundException e) {
+                System.out.println("displayDocSummery. failed to open file");
                 e.printStackTrace();
             }
         }
@@ -264,7 +275,7 @@ public class MainGui {
         btnLoginAsAdmin.addActionListener(e -> {
 
             if(appCtrl.isLoggedAsAdmin()){
-                //already logged as admin
+                //already logged as admin, downgrade to visitor access
                 setLblSystemMsg("");
                 btnLoginAsAdmin.setText(LOG_IN);
                 appCtrl.setAdminAccess(false);
@@ -274,12 +285,14 @@ public class MainGui {
 
                 jcbAddDoc.setEnabled(false);
                 jcbRemoveDoc.setEnabled(false);
+                btnResetAppDb.setEnabled(false);
 
             }
             else {
                 //logged as visitor
                 String pass = getPfAdminPassword().getText().toString();
                 if(appCtrl.verifyAdminPass(pass)){
+                    //password verification succeeds, allowing admin access.
                     setLblLoggedAs(LOGGED_AS_ADMIN);
                     btnLoginAsAdmin.setText(LOG_OUT);
                     appCtrl.setAdminAccess(true);
@@ -291,6 +304,7 @@ public class MainGui {
 
                     jcbAddDoc.setEnabled(true);
                     jcbRemoveDoc.setEnabled(true);
+                    btnResetAppDb.setEnabled(true);
 
                     try {
                         loadDbToApp();
@@ -310,8 +324,6 @@ public class MainGui {
             return;
         });
 
-
-        //TODO 00: add a re-add an already hidden document
 
 
         //TODO: turn jcbAddDoc into JList for group selection of documents
@@ -389,8 +401,12 @@ public class MainGui {
         //get id and name
 
         for(String[] record : records){
+            String nameAndId = record[3] + " (" + record[1] +")";
 
-            jcbDocNameResults.addItem(record[3] + " (" + record[1] +")");
+            if(((DefaultComboBoxModel)jcbDocNameResults.getModel()).getIndexOf(nameAndId) == -1) {
+                jcbDocNameResults.addItem(nameAndId);
+            }
+
         }
     }
 
