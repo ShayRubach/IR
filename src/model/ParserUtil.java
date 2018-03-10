@@ -98,7 +98,7 @@ public class ParserUtil {
 
         //TODO: handle & operator
         if(searchQuery.contains("&"))
-            handleOperatorAnd(searchQuery);
+            return handleOperatorAnd(searchQuery,db);
 
         //TODO: handle () operator
         if(searchQuery.contains("(") && searchQuery.contains(")"))
@@ -202,7 +202,40 @@ public class ParserUtil {
     private void handleOperatorParentheses(String searchQuery) {
     }
 
-    private void handleOperatorAnd(String searchQuery) {
+    private ArrayList<String[]> handleOperatorAnd(String searchQuery, DatabaseUtil db) throws SQLException {
+
+        System.out.println("handleOperatorAnd: called.\t searchQuery="+searchQuery);
+
+        ArrayList<String[]> recordsList = new ArrayList<>();
+        String[] tempQuery = searchQuery.split(" ");
+        String leftWord=null;
+        String rightWord=null;
+
+        for (int i = 0; i < tempQuery.length ; i++) {
+            if(tempQuery[i].equals("&") && tempQuery[i+1] != null){
+                leftWord = tempQuery[i-1];
+                rightWord = tempQuery[i+1];
+                break;
+            }
+        }
+
+        db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOC_BY_TERM_AND_TERM);
+        db.pStmt.setString(1,leftWord);
+        db.pStmt.setString(2,rightWord);
+        db.pStmt.setString(3,leftWord);
+        db.pStmt.setString(4,rightWord);
+        db.rs = db.pStmt.executeQuery();
+
+        while(db.rs.next()){
+            String[] record = {db.rs.getString(1),      //word
+                    String.valueOf(db.rs.getInt(2)),    //id
+                    String.valueOf(db.rs.getInt(3)),    //appearances
+                    db.rs.getString(5),                 //name
+                    db.rs.getString(6)};                //link
+            recordsList.add(record);
+        }
+
+        return recordsList;
     }
 
     private void handleOperatorOr(String searchQuery) {
@@ -222,7 +255,7 @@ public class ParserUtil {
             }
         }
 
-        db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOC_WITHOUT_TERM);
+        db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOC_BY_NOT_TERM);
         db.pStmt.setString(1,word);
         db.rs = db.pStmt.executeQuery();
 

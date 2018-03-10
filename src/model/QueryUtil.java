@@ -70,26 +70,30 @@ public class QueryUtil {
                     "SET display=1 " +
                     "WHERE id=?";
 
-    public static final String GET_DOC_WITHOUT_TERM =
+    public static final String GET_DOC_BY_NOT_TERM =
             "SELECT word,doc_id,appears,id,name,link " +
-                    "FROM index_files,storage_files " +
+                    "FROM index_files "+
+                    "JOIN storage_files ON storage_files.id=index_files.doc_id " +
                     "WHERE doc_id NOT IN " +
                     "   (SELECT doc_id " +
                     "   FROM index_files " +
                     "   WHERE word=?) " +
                     "AND doc_id=id";
 
-    public static final String GET_DOC_WITHOUT_TERM2 =
-            "SELECT word,doc_id,appears,id,name,link " +
-                    "FROM index_files " +
-                    "JOIN storage_files " +
-                    "WHERE word != ? " +
-                    "ORDER BY appears DESC";
 
-
+    public static final String GET_DOC_BY_TERM_AND_TERM =
+            "SELECT word,doc_id,appears,id,name,link FROM index_files " +
+                    "JOIN storage_files ON storage_files.id=index_files.doc_id " +
+                    "WHERE " +
+                    "doc_id IN (SELECT doc_id FROM index_files WHERE word=?) " +
+                    "AND " +
+                    "doc_id IN (SELECT doc_id FROM index_files WHERE word=?) " +
+                    "AND " +
+                    "word=? or word=?";
 
     public static final String RESET_DB =
             "DROP TABLE IF EXISTS index_files,storage_files";
 
 
+    //SELECT * FROM (SELECT * FROM index_files WHERE word='did') as result WHERE result.doc_id IN (SELECT doc_id FROM index_files WHERE word='i')
 }
