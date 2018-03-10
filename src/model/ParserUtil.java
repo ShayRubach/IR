@@ -29,6 +29,7 @@ public class ParserUtil {
 
     public void createStopList() throws FileNotFoundException {
         Scanner itr = new Scanner(new File(stopListPath));
+
         while(itr.hasNextLine()){
             stopList.add(itr.next());
         }
