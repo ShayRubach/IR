@@ -5,11 +5,11 @@ public class QueryUtil {
     public static final String CREATE_INDEX_TABLE =
             "CREATE TABLE IF NOT EXISTS " +
                     "index_files (" +
-                        "word 		varchar(20) NOT NULL," +
-                        "doc_id 	int NOT NULL," +
-                        "appears 	int NOT NULL," +
-                        "FOREIGN KEY (doc_id) REFERENCES storage_files(id) ON DELETE CASCADE, " +
-                        "PRIMARY KEY (word,doc_id))";
+                    "word 		varchar(20) NOT NULL," +
+                    "doc_id 	int NOT NULL," +
+                    "appears 	int NOT NULL," +
+                    "FOREIGN KEY (doc_id) REFERENCES storage_files(id) ON DELETE CASCADE, " +
+                    "PRIMARY KEY (word,doc_id))";
 
 
     public static final String CREATE_STORAGE_FILES_TABLE =
@@ -25,18 +25,18 @@ public class QueryUtil {
     //perform safe check for dups
     public static final String INSERT_FILE_TO_STORAGE =
             "INSERT INTO storage_files (" +
-                "name, " +
-                "link," +
-                "display ) " +
-            "VALUES(?,?,?) ";
+                    "name, " +
+                    "link," +
+                    "display ) " +
+                    "VALUES(?,?,?) ";
 
     //perform safe check for dups
     public static final String INSERT_NEW_INDEX_FILE =
             "INSERT INTO index_files (" +
-                "word, " +
-                "doc_id," +
-                "appears ) " +
-            "VALUES(?,?,?) ";
+                    "word, " +
+                    "doc_id," +
+                    "appears ) " +
+                    "VALUES(?,?,?) ";
 
     public static final String REMOVE_FILE_FROM_STORAGE =
             "UPDATE storage_files " +
@@ -49,8 +49,8 @@ public class QueryUtil {
 
     public static final String GET_LOCAL_STORAGE_FILES =
             "SELECT id,name " +
-            "FROM storage_files " +
-            "WHERE display=1";
+                    "FROM storage_files " +
+                    "WHERE display=1";
 
     public static final String GET_DOCS_BY_TERM =
             "SELECT * FROM index_files,storage_files " +
@@ -58,7 +58,7 @@ public class QueryUtil {
                     "AND doc_id=id " +
                     "AND display=1 " +
                     "ORDER BY appears DESC";
-    }
+}
 
 //    public static final String GET_DOCS_BY_TERM =
 //            "SELECT *,name " +

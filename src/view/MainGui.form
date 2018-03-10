@@ -186,7 +186,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="9e98e" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+          <component id="9e98e" class="javax.swing.JTextArea" binding="taDocSummery">
             <constraints/>
             <properties/>
           </component>

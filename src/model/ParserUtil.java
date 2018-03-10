@@ -3,6 +3,7 @@ package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,6 +73,7 @@ public class ParserUtil {
 
 
     public ArrayList<String[]> search(String searchQuery, DatabaseUtil db) throws SQLException {
+        //TODO: remove punctuations
 
         //convert the query holder to string[] in case we need to handle multiple terms:
         String[] multipleTermsQuery = {searchQuery};
@@ -79,14 +81,12 @@ public class ParserUtil {
         ArrayList<String[]> recordsList = new ArrayList<>();        //will holder all records we get as results
 
         //remove useless spaces:
-        searchQuery = fixSpaces(searchQuery);
+        searchQuery = removeUselessSpaces(searchQuery);
+        //searchQuery = searchQuery.trim().replaceAll(" ","");
+        //searchQuery  = searchQuery.trim().replaceAll(" +", " ");
 
         //TODO:eliminate stop words which aren't between quotation marks
         searchQuery = eliminateStopWords(searchQuery,db);
-
-
-
-        System.out.println("final filtered query: " + searchQuery);
 
 
         opHandler.countOperators(searchQuery);
@@ -101,25 +101,30 @@ public class ParserUtil {
 //            searchQuery = handleOperatorQuotation(searchQuery);
 //            multipleTermsQuery = searchQuery.split(" ");
 //        }
+//
+//
+//        //TODO: handle | operator
+//        if(searchQuery.contains("!"))
+//            handleOperatorOr(searchQuery);
+//
+//        //TODO: handle | operator
+//        if(searchQuery.contains("|"))
+//            handleOperatorOr(searchQuery);
+//
+//        //TODO: handle & operator
+//        if(searchQuery.contains("&"))
+//            handleOperatorAnd(searchQuery);
+//
+//        //TODO: handle () operator
+//        if(searchQuery.contains("(") && searchQuery.contains(")"))
+//            handleOperatorParanthesis(searchQuery);
 
-        //TODO: handle | operator
-        if(searchQuery.contains("!"))
-            handleOperatorOr(searchQuery);
-
-        //TODO: handle | operator
-        if(searchQuery.contains("|"))
-            handleOperatorOr(searchQuery);
-
-        //TODO: handle & operator
-        if(searchQuery.contains("&"))
-            handleOperatorAnd(searchQuery);
-
-        //TODO: handle () operator
-        if(searchQuery.contains("(") && searchQuery.contains(")"))
-            handleOperatorParanthesis(searchQuery);
 
 
-        //handles 1 document with 1 single word
+
+
+
+
         db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
         db.pStmt.setString(1,searchQuery);
         db.rs = db.pStmt.executeQuery();
@@ -135,24 +140,64 @@ public class ParserUtil {
 
         }
 
+
         return recordsList;
+
+
     }
 
-    //makes equal spaces between words and operators, e.g:
-    //turns->       word!   (another &"you")|phrase       into->       word ! (another & " you " ) | phrase
-    private String fixSpaces(String searchQuery) {
-        String[] operators = {"\\(","\\)","\\&","\\|","\\!","\\\""};
-        for(String op : operators)
-            searchQuery = searchQuery.trim().replaceAll(op," " + op + " ");
+    private String removeUselessSpaces(String searchQuery) {
         searchQuery  = searchQuery.trim().replaceAll(" +", " ");
         return searchQuery;
     }
 
-    //combine all words in the " " boundaries into 1 single phrase
-    private String handleOperatorQuotation(String searchQuery) {
-        int posStart = searchQuery.indexOf("\"");
-        int posEnd = searchQuery.substring(posStart+1).indexOf("\"");
-        return searchQuery.substring(posStart+1,posEnd+1);
+    private void handleOperatorQuotation(String searchQuery,DatabaseUtil db) throws SQLException {
+
+        ArrayList<Integer> posList = new ArrayList<>();
+        ArrayList<String[]>  results = new ArrayList<>();
+        String tempQuery = searchQuery;
+        findSymbols(posList,searchQuery,'\"');
+        //findQuotationMarks(posList,searchQuery);
+
+
+        if(!posList.isEmpty()){
+            for(int i=0; i < posList.size() ; i+=2){
+                tempQuery = searchQuery.substring(posList.get(i)+2,posList.get(i+1)-1);
+                String[] splitStr = tempQuery.split(" ");
+
+                System.out.println(splitStr.length);
+                for(int j=0; j < splitStr.length ; j++){
+                    db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
+                    db.pStmt.setString(1,splitStr[j]);
+                    db.rs = db.pStmt.executeQuery();
+                    while(db.rs.next()){
+                        String[] record = {
+                                db.rs.getString(1),
+                                String.valueOf(db.rs.getInt(2)),
+                                db.rs.getString(5),
+                                db.rs.getString(5),
+                                db.rs.getString(6)
+                        };
+                        results.add(record);
+                    }
+                }
+            }
+        }
+
+        for(String[] sa : results){
+            try {
+                Scanner itr = new Scanner(new File(sa[3]));
+                while(itr.hasNextLine()){
+                    String line = itr.nextLine();
+                    if(line.contains(tempQuery)){
+                        System.out.println(sa[3]);
+                        break;
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void handleOperatorParanthesis(String searchQuery) {
@@ -164,11 +209,47 @@ public class ParserUtil {
     private void handleOperatorOr(String searchQuery) {
     }
 
-    private String eliminate(String searchQuery) {
+
+    private String eliminateStopWords(String searchQuery, DatabaseUtil db) {
 
         searchQuery = searchQuery.toLowerCase();
+        ArrayList<Integer> posList = new ArrayList<>();
+        findSymbols(posList,searchQuery,'\"');
+
+
+        StringBuilder sb = new StringBuilder(searchQuery);
+        //encrypt all characters between q marks:
+        for(int i=0; i < posList.size() ; i+=2) {
+            for(int j=posList.get(i); j < posList.get(i+1)+1; j++){
+                sb.setCharAt(j,'$');
+            }
+        }
+        //remove any clear-text stop word that is left outside of q marks:
+        sb = new StringBuilder(eliminate(sb.toString()));
+
+        //decrypt back with the original characters:
+        for(int i=0; i < posList.size() ; i+=2) {
+            for(int j=posList.get(i); j < posList.get(i+1)+1; j++){
+                sb.setCharAt(j,searchQuery.charAt(j));
+            }
+        }
+
+        System.out.println(sb.toString().trim().replaceAll(" +"," "));
+        return sb.toString().trim().replaceAll(" +"," ");
+    }
+
+    private void findSymbols(ArrayList<Integer> posList, String searchQuery, char symbol) {
+        for(int j = 0 ; j < searchQuery.length() ; ++j) {
+            if(searchQuery.charAt(j) == symbol ){
+                posList.add(j);
+            }
+        }
+    }
+
+
+    private String eliminate(String searchQuery) {
+        searchQuery = searchQuery.toLowerCase();
         String word,regexWord;
-        System.out.println("about to eliminate from: " + searchQuery);
 
         try {
             //iterate over stop words file
@@ -184,51 +265,17 @@ public class ParserUtil {
             System.out.println("eliminateStopWords called. cant find the stop list file");
             e.printStackTrace();
         }
-        System.out.println("squery: " + searchQuery);
+
         return searchQuery;
     }
+
 
     private String fixedSpacesLength(String word) {
         StringBuilder sb = new StringBuilder();
         for(int  i=0 ; i < word.length() ; i++){
             sb.append(" ");
         }
-
         return sb.toString();
-    }
-
-
-    private String eliminateStopWords(String searchQuery, DatabaseUtil db) {
-
-        searchQuery = searchQuery.toLowerCase();
-        ArrayList<Integer> posList = new ArrayList<>();
-
-        //look for quotation marks
-        for(int j = 0 ; j < searchQuery.length() ; ++j) {
-            if(searchQuery.charAt(j) == '\"'){
-                posList.add(j);
-            }
-        }
-
-        StringBuilder sb = new StringBuilder(searchQuery);
-        //replace whole quoted word with a $ symbol:
-        for(int i=0; i < posList.size() ; i+=2) {
-            for(int j=posList.get(i); j < posList.get(i+1)+1; j++){
-                sb.setCharAt(j,'$');
-            }
-        }
-        //remove any stop word that is left out of q marks:
-        sb = new StringBuilder(eliminate(sb.toString()));
-
-        //replace $ symbol back with the original characters:
-                for(int i=0; i < posList.size() ; i+=2) {
-            for(int j=posList.get(i); j < posList.get(i+1)+1; j++){
-                sb.setCharAt(j,searchQuery.charAt(j));
-            }
-        }
-        System.out.println("decrypted sb: " + sb);
-
-        return sb.toString().trim().replaceAll(" +"," ");
     }
 
 
@@ -237,11 +284,15 @@ public class ParserUtil {
     }
 
 
+
+
     class OperatorHandler {
         public int opQuotations = 0;
-        public int opParenthasis = 0;
+        public int opParentheses = 0;
         public int opOr = 0;
         public int opAnd = 0;
+        public int opNot = 0;
+
 
         // in simple terms: < <operatorType,OperatorsCount>, List<posStart,posEnd> >
         public HashMap<HashMap<String,Integer>,ArrayList<HashMap<Integer,Integer>>> ops = new HashMap<>();
@@ -252,19 +303,39 @@ public class ParserUtil {
 
         public void countOperators(String searchQuery){
             for (int i = 0 ; i < searchQuery.length() ; ++i){
-                ;
+                switch (searchQuery.charAt(i)){
+                    case '\"':
+                        opQuotations++; break;
+                    case '&':
+                        opAnd++; break;
+                    case '!':
+                        opNot++; break;
+                    case '|':
+                        opOr++; break;
+                    case '(':
+                        opParentheses++; break;
+                    case ')':
+                        opParentheses++; break;
+                    default:
+                        break;
+                }
             }
+            opQuotations /= 2;
+            opParentheses /= 2;
         }
 
 
         public void clean() {
             opQuotations=0;
-            opParenthasis=0;
+            opParentheses=0;
             opOr=0;
             opAnd=0;
+            opNot=0;
         }
 
     }
+
+
 
 
 

@@ -38,7 +38,7 @@ public class MainGui {
     private JLabel lblSystemMsg;
     private JScrollPane jspDocResTable;
     private JTextArea taFullDocContent;
-    private JTextArea textArea1;
+    private JTextArea taDocSummery;
     private JFrame mainFrame;
     private DefaultTableModel modelIndexDocResults;
     private ArrayList<String[]> records;
@@ -59,8 +59,14 @@ public class MainGui {
         initComboxBoxes();
         initComboxBoxesListeners();
         initTables();
+        initTextArea();
 
-        }
+    }
+
+    private void initTextArea() {
+        taDocSummery.setEditable(false);
+        taFullDocContent.setEditable(false);
+    }
 
     private void initTables() {
         final String[] tbIndexDocResColumns = {"Word","Doc Id","Appearances"};
@@ -93,6 +99,9 @@ public class MainGui {
         int x = (int) ( 150 + (dimension.getWidth() - mainFrame.getWidth()) / 2);
         int y = (int) ((dimension.getHeight() - mainFrame.getHeight()) / 2);
         mainFrame.setLocation(x, y);
+
+        //set enter as search button default stroke
+        mainFrame.getRootPane().setDefaultButton(btnSearch);
 
     }
 
@@ -176,6 +185,31 @@ public class MainGui {
 
     private String removePunctuation(String word) {
         return word.replaceAll("(?=[^a-zA-Z0-9])([^'])", "");
+    }
+
+    private void displayDocSummery(ArrayList<String[]> records) {
+        taDocSummery.setText("");
+        for(String[] record : records){
+            try {
+                Scanner itr = new Scanner(new File(record[4]));
+
+                taDocSummery.setText(taDocSummery.getText() + record[3].substring(0,record[3].length()-4) + " : \n" );
+                taDocSummery.setText(taDocSummery.getText() + "===============================\n");
+                for(int i = 0 ; i < 3 && itr.hasNextLine() ; i++){
+                    String line = itr.nextLine();
+                    if(line.equals("") || line.equals('\n')) {
+                        --i;
+                        continue;
+                    }
+                    if(i == 2)
+                        line += " .....";
+                    taDocSummery.setText(taDocSummery.getText() + line + "\n");
+                }
+                taDocSummery.setText(taDocSummery.getText() + "\n");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void highlightInTextArea(JTextArea taFullDocContent, String phrase, ArrayList<Integer> pos) {
@@ -309,9 +343,6 @@ public class MainGui {
             }
         });
 
-
-        //TODO: make search lunch with key storke (Enter)
-
         //Search button:
         btnSearch.addActionListener(e -> {
 
@@ -319,16 +350,11 @@ public class MainGui {
             defaultComboBoxHeader(jcbDocNameResults,"Result");
             if(/* some validation on string */ true){
                 String searchQuery = getTfSearchLine().getText().toString();
-
                 resetTableRecords();
                 try {
-
                     records = appCtrl.search(searchQuery);
-
-                    //TODO: add a 3-line summery below the Jtable for each doc..
                     loadRecordsIntoTable(records);
-
-                    //TODO: show the found docs in jcb
+                    displayDocSummery(records);
                     displayDocsInComboBox(records);
 
                     //clear any content displayed before
@@ -337,8 +363,6 @@ public class MainGui {
                     e1.printStackTrace();
                 }
             }
-
-
         });
 
 
