@@ -78,12 +78,12 @@ public class QueryUtil {
                     "   (SELECT doc_id " +
                     "   FROM index_files " +
                     "   WHERE word=?) " +
-                    "AND doc_id=id";
+                    "AND doc_id=id AND display=1" ;
 
 
     public static final String GET_DOC_BY_TERM_AND_TERM =
             "SELECT word,doc_id,appears,id,name,link FROM index_files " +
-                    "JOIN storage_files ON storage_files.id=index_files.doc_id " +
+                    "JOIN storage_files ON storage_files.id=index_files.doc_id AND display=1 " +
                     "WHERE " +
                     "doc_id IN (SELECT doc_id FROM index_files WHERE word=?) " +
                     "AND " +
