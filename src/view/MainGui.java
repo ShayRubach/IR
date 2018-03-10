@@ -179,15 +179,10 @@ public class MainGui {
 
 
         }
-        //TODO: change this to get word from another soruce (already parsed) and not the raw text from input
-        //word = removePunctuation(tfSearchLine.getText());
-
 
         for (int i = 0; i < tableIndexDocResults.getRowCount() ; i++) {
             word = tableIndexDocResults.getValueAt(i,0).toString();
             pos = getWordPositions(pos,word,fullFileContent);
-
-            //TODO: highlight the word here - do not forget multiple words case
             highlightInTextArea(taFullDocContent,word,pos);
         }
 
@@ -426,7 +421,8 @@ public class MainGui {
 
     private void loadRecordsIntoTable(ArrayList<String[]> records) {
         for(String[] record : records){
-            modelIndexDocResults.addRow(record);
+            if(record != null)
+                modelIndexDocResults.addRow(record);
         }
 
     }

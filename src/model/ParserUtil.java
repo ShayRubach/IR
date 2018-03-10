@@ -1,11 +1,14 @@
 package model;
 
 
+import annotations.A;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ListIterator;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -35,6 +38,7 @@ public class ParserUtil {
 
     }
 
+    @A.Indexing
     public void indexFile(int docId, String fileName, DatabaseUtil db) throws FileNotFoundException, SQLException {
         String line;
         String[] words;
@@ -75,10 +79,6 @@ public class ParserUtil {
 
     public ArrayList<String[]> search(String searchQuery, DatabaseUtil db) throws SQLException {
 
-
-        //convert the query holder to string[] in case we need to handle multiple terms:
-        String[] multipleTermsQuery = {searchQuery};
-
         ArrayList<String[]> recordsList = new ArrayList<>();        //will holder all records we get as results
 
         //remove useless spaces:
@@ -87,6 +87,9 @@ public class ParserUtil {
         opHandler.countOperators(searchQuery);
 
 
+        //TODO: handle () operator
+        if(searchQuery.contains("(") && searchQuery.contains(")"))
+            return handleOperatorParentheses(searchQuery,db);
 
         System.out.println(searchQuery);
         //TODO: handle ! operator
@@ -101,19 +104,9 @@ public class ParserUtil {
         if(searchQuery.contains("&"))
             return handleOperatorAnd(searchQuery,db);
 
-        //TODO: handle () operator
-        if(searchQuery.contains("(") && searchQuery.contains(")"))
-            handleOperatorParentheses(searchQuery);
-
-
-
-
-
-
-
-
-
-
+        //TODO: handle "" operator
+        if(searchQuery.contains("\""))
+            return handleOperatorQuotation(searchQuery,db);
 
 
         db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
@@ -151,21 +144,23 @@ public class ParserUtil {
         return searchQuery;
     }
 
-    private void handleOperatorQuotation(String searchQuery,DatabaseUtil db) throws SQLException {
+    private ArrayList<String[]> handleOperatorQuotation(String searchQuery, DatabaseUtil db) throws SQLException {
 
         ArrayList<Integer> posList = new ArrayList<>();
-        ArrayList<String[]>  results = new ArrayList<>();
+        ArrayList<String[]>  records = new ArrayList<>();
+        ArrayList<String[]>  tempRecords = new ArrayList<>();
+
         String tempQuery = searchQuery;
         findSymbols(posList,searchQuery,'\"');
-        //findQuotationMarks(posList,searchQuery);
 
+        System.out.println("handleOperatorQuotation: tempQuery="+tempQuery);
 
         if(!posList.isEmpty()){
             for(int i=0; i < posList.size() ; i+=2){
                 tempQuery = searchQuery.substring(posList.get(i)+2,posList.get(i+1)-1);
                 String[] splitStr = tempQuery.split(" ");
 
-                System.out.println(splitStr.length);
+
                 for(int j=0; j < splitStr.length ; j++){
                     db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
                     db.pStmt.setString(1,splitStr[j]);
@@ -178,19 +173,21 @@ public class ParserUtil {
                                 db.rs.getString(5),
                                 db.rs.getString(6)
                         };
-                        results.add(record);
+                        records.add(record);
                     }
                 }
             }
         }
 
-        for(String[] sa : results){
+        System.out.println("bla bla bla tempquery: " + tempQuery);
+        for(String[] record : records){
             try {
-                Scanner itr = new Scanner(new File(sa[3]));
+                Scanner itr = new Scanner(new File(record[4]));
                 while(itr.hasNextLine()){
                     String line = itr.nextLine();
-                    if(line.contains(tempQuery)){
-                        System.out.println(sa[3]);
+                    if(line.trim().contains(tempQuery)){
+                        System.out.println("this line is good: " + line);
+                        tempRecords.add(record);
                         break;
                     }
                 }
@@ -198,9 +195,16 @@ public class ParserUtil {
                 e.printStackTrace();
             }
         }
+
+        //TODO: fix empty return val here. "something" is not working for some reason while "it" "a" and more works.
+        return new ArrayList<>(tempRecords);
     }
 
-    private void handleOperatorParentheses(String searchQuery) {
+    private ArrayList<String[]> handleOperatorParentheses(String searchQuery, DatabaseUtil db) {
+        ArrayList<String[]> recordsList = new ArrayList<>();
+
+
+        return recordsList;
     }
 
 

@@ -52,6 +52,7 @@ public class DatabaseUtil {
 
 
     @A.DBOperation
+    @A.Posting  //make posting files
     public String[] getAvailableSourceFiles(String sourceFolderPath)  {
         ArrayList<String> docArrayList = new ArrayList<>();
 
