@@ -144,18 +144,10 @@ public class DatabaseUtil {
     }
 
     public boolean isAlreadyInStorage(String fileName) {
-        System.out.println("isAlreadyInStorage called. file: " + fileName);
-        Scanner sc = null;
-        try {
-            sc = new Scanner(new File(getLocalStoragePath() + fileName));
-        }
-        catch (FileNotFoundException e){
-            return false;
-        }
-
-        sc.close();
-        return true;
+        System.out.println("isAlreadyInStorage: called. file: " + fileName);
+        return fileName.contains("(") ? true : false;
     }
+
 
 
 
@@ -233,12 +225,30 @@ public class DatabaseUtil {
 
     }
 
-    public void setFileAvailable(String fileName) {
+    public void setFileAvailable(String fileName) throws SQLException {
         System.out.println("setFileAvailable called. file: " + fileName);
+
+        int docId = Integer.parseInt(fileName.substring(fileName.length()-2,fileName.length()-1));
+        System.out.println("setFileAvailable: docId="+docId);
+
+        pStmt = conn.prepareStatement(QueryUtil.SET_DOC_AVAILABLE);
+        pStmt.setInt(1,docId);
+        pStmt.execute();
+
     }
 
     public void reset() throws SQLException {
-        pStmt =conn.prepareStatement(QueryUtil.RESET_DB);
+        System.out.println("reset() called.");
+
+        pStmt = conn.prepareStatement(QueryUtil.RESET_DB);
         pStmt.execute();
+
+
+        File localStorageDir = new File(getLocalStoragePath());
+        File[] fileList = localStorageDir.listFiles();
+
+        for (File f : fileList )
+            moveFile(f.getName(),getLocalStoragePath(),getSourceFilesPath());
+
     }
 }

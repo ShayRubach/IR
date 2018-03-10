@@ -161,10 +161,12 @@ public class MainGui {
     }
 
     private void displayFileContent(String path) throws FileNotFoundException {
+        System.out.println("displayFileContent: called. path="+path);
         Scanner itr = new Scanner(new File(path));
         String line,word;
         StringBuilder fullFileContent = new StringBuilder();
         ArrayList<Integer> pos = new ArrayList<>();
+
 
         while(itr.hasNextLine()){
             line = itr.nextLine();
@@ -243,6 +245,7 @@ public class MainGui {
     }
 
     private String fetchFilePath(String s) {
+        System.out.println("fetchFilePath: called. fileName="+s);
         String path = null;
         String id = s.substring(s.indexOf("(")+1,s.indexOf(")"));
 
@@ -341,6 +344,7 @@ public class MainGui {
                     removeFileFromStorage(fileAndId);
                     loadDbToApp();
                     jcbRemoveDoc.setSelectedIndex(0);
+
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }

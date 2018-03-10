@@ -70,7 +70,7 @@ public class AppController {
             parser.indexFile(docId,fileName,db);
         }
         else {
-            System.out.println(fileName + " is already in storage. set display=1");
+            System.out.println(fileName + " is ALREADY in storage. set display=1");
             db.setFileAvailable(fileName);
         }
 

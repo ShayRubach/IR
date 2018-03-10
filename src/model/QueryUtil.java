@@ -65,7 +65,10 @@ public class QueryUtil {
                     "AND display=1 " +
                     "ORDER BY appears DESC";
 
-
+    public static final String SET_DOC_AVAILABLE =
+            "UPDATE storage_files " +
+                    "SET display=1 " +
+                    "WHERE id=?";
 
 
     public static final String RESET_DB =
