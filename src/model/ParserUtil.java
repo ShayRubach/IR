@@ -270,12 +270,22 @@ public class ParserUtil {
 
                         if(leftDocId.equals(rightDocId)){
                             delete = false;
+
                             //add left record to the right records list
-                            queryMap.get(right).add(queryMap.get(left).get(j));
+                            int len =queryMap.get(left).get(j).length;
+
+                            queryMap.get(right).add(hackFromTheMovies(queryMap.get(left).get(j)));
+
                             queryMap.get(left).remove(j);
+                            System.out.println("FUUUUUUCCCCCCCCCCCCCKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+                            printMap(queryMap);
+
 
                         }
 
+                    }
+                    if(queryMap.get(left).isEmpty()){
+                        delete = false;
                     }
 
                     //if the right term did not match any docId from the left terms, remove it.
@@ -306,6 +316,17 @@ public class ParserUtil {
 
     }
 
+    private String[] hackFromTheMovies(String[] remove) {
+        List<String> nonBlank = new ArrayList<>();
+        for(String s: remove) {
+            if (!s.trim().isEmpty()) {
+                nonBlank.add(s);
+            }
+        }
+        // nonBlank will have all the elements which contain some characters.
+        return nonBlank.toArray( new String[nonBlank.size()] );
+    }
+
     private void printMap(HashMap<String, ArrayList<String[]>> queryMap) {
         for(String key : queryMap.keySet()){
             System.out.print(key + " : ");
@@ -313,6 +334,7 @@ public class ParserUtil {
                 for (String str : list){
                     System.out.print(str + "\t");
                 }
+                System.out.println("");
             }
             System.out.println("");
         }
