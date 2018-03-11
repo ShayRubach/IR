@@ -368,8 +368,16 @@ public class MainGui {
         btnSearch.addActionListener(e -> {
 
             //TODO: search event handling
-            defaultComboBoxHeader(jcbDocNameResults,"Result");
             if(/* some validation on string */ true){
+
+
+                //clear any content displayed before
+                defaultComboBoxHeader(jcbDocNameResults,"Result");
+                clearFullDocHighlights(taFullDocContent);
+                taDocSummery.setText("");
+                taFullDocContent.setText("");
+
+
                 String searchQuery = getTfSearchLine().getText().toString();
                 resetTableRecords();
                 try {
@@ -378,9 +386,7 @@ public class MainGui {
                         loadRecordsIntoTable(records);
                         displayDocSummery(records);
                         displayDocsInComboBox(records);
-                        clearFullDocHighlights(taFullDocContent);
-                        //clear any content displayed before
-                        taFullDocContent.setText("");
+
                     }
 
 
