@@ -62,6 +62,7 @@ public class ParserUtil {
 
     }
 
+
     private void mapWords(String[] words, String line,HashMap<String,Integer> appearances) {
         for(String s : words){
             if(!appearances.containsKey(s))
