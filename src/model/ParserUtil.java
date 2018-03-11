@@ -85,12 +85,11 @@ public class ParserUtil {
         searchQuery = eliminateStopWords(searchQuery,db);
 
 
-
         queryMap = mapAllTerms(searchQuery,db);
         printMap(queryMap);
 
         recordsList = deepSearch(queryMap,searchQuery);
-        printRecords(recordsList);
+        //printRecords(recordsList);
 
         return recordsList;
 
@@ -107,24 +106,19 @@ public class ParserUtil {
             return queryMap.get(searchQuery);
         }
 
+
+        //TODO: sort out the left-to-right restriction of operations
+        String opType = findFirstOperator(searchQuery);
+
+        System.out.println("OP TYPE : " + opType);
+
         StringBuilder leftWord = new StringBuilder();
         StringBuilder rightWord = new StringBuilder();
 
 
-//        reut & ! ( shay & idan | gal ) & elaya = searchQuery
-//        reut & shay & idan | gal  & elaya
+        System.out.println("$$$$$$$$$   QUERY STRING: " + searchQuery);
 
-
-//        //TODO: handle () operator
-//        if(searchQuery.contains("(") && searchQuery.contains(")"))
-//            handleOperatorParentheses(searchQuery,db);
-
-//        //TODO: handle ! operator
-//        if(searchQuery.contains("!"))
-//            return handleOperatorNot(searchQuery,db);
-//
-
-        if(searchQuery.contains("|")){
+        if(opType.equals("|")){
 
             //get both operands to the sides of |
             getOperands(leftWord,rightWord,searchQuery,"|");
@@ -135,9 +129,10 @@ public class ParserUtil {
             //cut the treated part of the string: (leftWord_size + operator (1) + spaces (2)
             searchQuery = searchQuery.substring(leftWord.length()+3);
 
-        }
 
-        if(searchQuery.contains("&")){
+
+        }
+        else if(opType.equals("&")){
 
             //get both operands to the sides of |
             getOperands(leftWord,rightWord,searchQuery,"&");
@@ -148,6 +143,7 @@ public class ParserUtil {
             //cut the treated part of the string: (leftWord_size + operator (1) + spaces (2)
             searchQuery = searchQuery.substring(leftWord.length()+3);
 
+
         }
 
 
@@ -157,6 +153,14 @@ public class ParserUtil {
 //        if(searchQuery.contains("\""))
 //            return handleOperatorQuotation(searchQuery,db);
 
+//        //TODO: handle () operator
+//        if(searchQuery.contains("(") && searchQuery.contains(")"))
+//            handleOperatorParentheses(searchQuery,db);
+
+//        //TODO: handle ! operator
+//        if(searchQuery.contains("!"))
+//            return handleOperatorNot(searchQuery,db);
+//
 
 
 
@@ -164,9 +168,31 @@ public class ParserUtil {
 
 
 
-
-
+        leftWord.setLength(0);
+        rightWord.setLength(0);
         return deepSearch(queryMap,searchQuery);
+    }
+
+
+
+    private String findFirstOperator(String searchQuery) {
+        for (int i = 0 ; i < searchQuery.length() ; ++i){
+            switch (searchQuery.charAt(i)){
+                case '\"':
+                    return "\"";
+                case '&':
+                    return "&";
+                case '!':
+                    return "!";
+                case '|':
+                    return "|";
+                case '(':
+                    return "(";
+                default:
+                    break;
+            }
+        }
+        return null;
     }
 
     private void printRecords(ArrayList<String[]> records) {
@@ -185,43 +211,57 @@ public class ParserUtil {
         System.out.println("doLogic: map status:");
         printMap(queryMap);
 
+        String right = rightWord.toString();
+        String left = leftWord.toString();
+
 
         if(op.equals("|")) {
             System.out.println("doLogic: case OR(|) ");
 
+            if(queryMap.get(left).size() == 0 || queryMap.get(right).size() == 0){
+                if (queryMap.get(right).size() == 0){
+                    queryMap.remove(right);;
+                }
+                else{
+                    queryMap.remove(left);
+                }
+                return;
+            }
 
             //check if words are identical
             // TODO: fix yeah | yeah | yeah issue!
             if(!rightWord.toString().equals(leftWord.toString())) {
                 //unite all records into the right-side key
-                for (String[] left : queryMap.get(leftWord.toString())) {
-                    queryMap.get(rightWord.toString()).add(left);
+                for (String[] leftLine : queryMap.get(leftWord.toString())) {
+                    queryMap.get(rightWord.toString()).add(leftLine);
                 }
 
             }
             //remove left term
             queryMap.remove(leftWord.toString());
+
         }
-
-
-
-
-        if(op.equals("&")) {
+        else if(op.equals("&")) {
             System.out.println("doLogic: case AND(&) ");
+            System.out.println("---------:LEFT:" + left);
+            System.out.println("---------:RIGHT:" + right);
 
-            String right = rightWord.toString();
-            String left = leftWord.toString();
-            int size = queryMap.get(right).size();
-
+            if(queryMap.get(left).size() == 0 || queryMap.get(right).size() == 0){
+                if(queryMap.get(left).size() == 0 ){
+                    queryMap.remove(right);
+                }
+                else{
+                    queryMap.remove(left);
+                }
+                return;
+            }
 
             //check if words are identical
             if(!right.equals(left)) {
 
 
 
-
-
-                for (int i = 0; i < size ; i++) {
+                for (int i = 0; i < queryMap.get(right).size() ; i++) {
                     String rightDocId = queryMap.get(right).get(i)[1];
                     boolean delete = true;
 
@@ -232,19 +272,7 @@ public class ParserUtil {
                             delete = false;
                             //add left record to the right records list
                             queryMap.get(right).add(queryMap.get(left).get(j));
-
-
-                            System.out.println("RIGHT:");
-                            for(String[] STR : queryMap.get(right)){
-                                for(String sTr : STR)
-                                    System.out.println(sTr);
-                            }
-
-                            System.out.println("LEFT:");
-                            for(String[] STR : queryMap.get(left)){
-                                for(String sTr : STR)
-                                    System.out.println(sTr);
-                            }
+                            queryMap.get(left).remove(j);
 
                         }
 
@@ -260,11 +288,19 @@ public class ParserUtil {
             }
             //remove left term
             queryMap.remove(leftWord.toString());
+
+
+
         }
 
 
-
-
+        System.out.println("AFTER & IS DONE: ");
+        printMap(queryMap);
+//        System.out.println("RIGHT:");
+//        for(String[] STR : queryMap.get(right)){
+//            for(String sTr : STR)
+//                System.out.println(sTr);
+//        }
 
 
 
@@ -306,8 +342,9 @@ public class ParserUtil {
 
                 records.add(record);
             }
-            //TODO: remove clear, it ends up as null
-            map.put(word,new ArrayList<>(records));
+
+            //if(!records.isEmpty())
+                map.put(word,new ArrayList<>(records));
 
             System.out.println("mapAllTerms:  map=");
             printMap(map);

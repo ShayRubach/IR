@@ -374,12 +374,24 @@ public class MainGui {
                 resetTableRecords();
                 try {
                     records = appCtrl.search(searchQuery);
-                    loadRecordsIntoTable(records);
-                    displayDocSummery(records);
-                    displayDocsInComboBox(records);
-                    clearFullDocHighlights(taFullDocContent);
-                    //clear any content displayed before
-                    taFullDocContent.setText("");
+                    if(null != records && !records.isEmpty()){
+                        loadRecordsIntoTable(records);
+                        displayDocSummery(records);
+                        displayDocsInComboBox(records);
+                        clearFullDocHighlights(taFullDocContent);
+                        //clear any content displayed before
+                        taFullDocContent.setText("");
+                    }
+
+
+//                    System.out.println("FROM GUI: ");
+//                    for(String[] str : records){
+//                        for(String s : str){
+//                            System.out.println(s);
+//                        }
+//                    }
+
+
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
@@ -420,11 +432,12 @@ public class MainGui {
     }
 
     private void loadRecordsIntoTable(ArrayList<String[]> records) {
-        for(String[] record : records){
-            if(record != null)
-                modelIndexDocResults.addRow(record);
+        if(records != null){
+            for(String[] record : records){
+                if(record != null)
+                    modelIndexDocResults.addRow(record);
+            }
         }
-
     }
 
     public void defaultComboBoxHeader(JComboBox jBox, String type){
