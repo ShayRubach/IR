@@ -88,7 +88,7 @@ public class ParserUtil {
         queryMap = mapAllTerms(searchQuery,db);
         printMap(queryMap);
 
-        recordsList = deepSearch(queryMap,searchQuery);
+        recordsList = deepSearch(queryMap,searchQuery,db);
         //printRecords(recordsList);
 
         return recordsList;
@@ -97,9 +97,9 @@ public class ParserUtil {
     }
 
 
-    private ArrayList<String[]> deepSearch(HashMap<String, ArrayList<String[]>> queryMap, String searchQuery) throws SQLException {
+    private ArrayList<String[]> deepSearch(HashMap<String, ArrayList<String[]>> queryMap, String searchQuery,DatabaseUtil db) throws SQLException {
 
-        if(queryMap.size() == 1 || searchQuery.split(" ").length == 1){
+        if(searchQuery.split(" ").length == 1 || queryMap.size() == 0){
             //return last record by the only remaining term in query
             System.out.println("deepSearch: \t no more terms, exiting.");
             System.out.println("SEARCH QUERY: " + searchQuery);
@@ -123,6 +123,18 @@ public class ParserUtil {
             //get both operands to the sides of |
             getOperands(leftWord,rightWord,searchQuery,"|");
 
+
+
+
+            //TODO: call to a func that converts the !term to term with opposite records:
+            //this function is not good:
+            searchQuery = invertIfNotTerm(searchQuery,db,queryMap,leftWord.toString(),rightWord.toString());
+
+
+
+
+
+
             //the union operation
             doLogic(queryMap,leftWord,rightWord,"|");
 
@@ -143,10 +155,19 @@ public class ParserUtil {
             //cut the treated part of the string: (leftWord_size + operator (1) + spaces (2)
             searchQuery = searchQuery.substring(leftWord.length()+3);
 
+        }
+        else if(opType.equals("!")){
+
+            handleOperatorNot(searchQuery,db,queryMap);
+            System.out.println("INDEX OF FUCKIN (!) : " + searchQuery.indexOf("!"));
+            searchQuery = searchQuery.substring(searchQuery.indexOf("!")+1);
+            searchQuery = fixSpaces(searchQuery);
+            System.out.println("AFTER SUBSTRING IN (!) : " + searchQuery);
+
 
         }
 
-
+        //TODO: put old handle on non-opertors -> return the exact record list. dont use recursive.
 
 
 //        //TODO: handle "" operator
@@ -170,9 +191,38 @@ public class ParserUtil {
 
         leftWord.setLength(0);
         rightWord.setLength(0);
-        return deepSearch(queryMap,searchQuery);
+        return deepSearch(queryMap,searchQuery,db);
     }
 
+    private String invertIfNotTerm(String searchQuery, DatabaseUtil db, HashMap<String,
+                                 ArrayList<String[]>> queryMap, String left,
+                                   String right) throws SQLException {
+
+        String word = null;
+        if(left.contains("!")){
+            word = left;
+        }
+        if(right.contains("!")){
+            word = right;
+        }
+
+        if(word == null){
+            return searchQuery;
+        }
+
+        handleOperatorNot("! "+word,db,queryMap);
+        System.out.println("INDEX OF FUCKIN (!) : " + searchQuery.indexOf("!"));
+
+        //TODO: cutthe string if it was in the middle of the query..
+        StringBuilder sb = new StringBuilder(searchQuery);
+        sb.deleteCharAt(searchQuery.indexOf("!"));
+        searchQuery = sb.toString();
+
+        searchQuery = fixSpaces(searchQuery);
+        System.out.println("AFTER SUBSTRING IN (!) : " + searchQuery);
+        return searchQuery;
+
+    }
 
 
     private String findFirstOperator(String searchQuery) {
@@ -213,6 +263,27 @@ public class ParserUtil {
 
         String right = rightWord.toString();
         String left = leftWord.toString();
+
+
+//        if(right.contains("!")){
+//
+//        }
+//        if(left.contains("!")){
+//
+//        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         if(op.equals("|")) {
@@ -397,26 +468,26 @@ public class ParserUtil {
         opHandler.countOperators(searchQuery);
 
 
-        //TODO: handle () operator
-        if(searchQuery.contains("(") && searchQuery.contains(")"))
-            return handleOperatorParentheses(searchQuery,db);
-
-        System.out.println(searchQuery);
-        //TODO: handle ! operator
-        if(searchQuery.contains("!"))
-            return handleOperatorNot(searchQuery,db);
-
-        //TODO: handle | operator
-        if(searchQuery.contains("|"))
-            return handleOperatorOr(searchQuery,db);
-
-        //TODO: handle & operator
-        if(searchQuery.contains("&"))
-            return handleOperatorAnd(searchQuery,db);
-
-        //TODO: handle "" operator
-        if(searchQuery.contains("\""))
-            return handleOperatorQuotation(searchQuery,db);
+//        //TODO: handle () operator
+//        if(searchQuery.contains("(") && searchQuery.contains(")"))
+//            return handleOperatorParentheses(searchQuery,db);
+//
+//        System.out.println(searchQuery);
+//        //TODO: handle ! operator
+//        if(searchQuery.contains("!"))
+//            return handleOperatorNot(searchQuery,db);
+//
+//        //TODO: handle | operator
+//        if(searchQuery.contains("|"))
+//            return handleOperatorOr(searchQuery,db);
+//
+//        //TODO: handle & operator
+//        if(searchQuery.contains("&"))
+//            return handleOperatorAnd(searchQuery,db);
+//
+//        //TODO: handle "" operator
+//        if(searchQuery.contains("\""))
+//            return handleOperatorQuotation(searchQuery,db);
 
 
         String words[] = removeDups(searchQuery.split(" "));
@@ -613,7 +684,7 @@ public class ParserUtil {
     }
 
     //restriction: the operator must be to the left of the operand
-    private ArrayList<String[]> handleOperatorNot(String searchQuery, DatabaseUtil db) throws SQLException {
+    private void handleOperatorNot(String searchQuery, DatabaseUtil db,HashMap<String,ArrayList<String[]>> queryMap) throws SQLException {
         System.out.println("handleOperatorNot: called.\t searchQuery="+searchQuery);
         ArrayList<String[]> recordsList = new ArrayList<>();
         String[] tempQuery = searchQuery.split(" ");
@@ -621,6 +692,7 @@ public class ParserUtil {
 
         for (int i = 0; i < tempQuery.length ; i++) {
             if(tempQuery[i].equals("!") && tempQuery[i+1] != null){
+                System.out.println("I PUT FUCKIGN NOT ON THIS SHIT: " + tempQuery[i+1]);
                 word = tempQuery[i+1];
                 break;
             }
@@ -639,7 +711,12 @@ public class ParserUtil {
             recordsList.add(record);
         }
 
-        return recordsList;
+        queryMap.put(word,recordsList);
+
+        System.out.println("AFTER NOT MADAFUCKAA:");
+        printMap(queryMap);
+
+        return;
 
     }
 
