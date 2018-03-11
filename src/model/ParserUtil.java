@@ -72,9 +72,198 @@ public class ParserUtil {
         appearances.remove("");
     }
 
-
-
     public ArrayList<String[]> search(String searchQuery, DatabaseUtil db) throws SQLException {
+
+        // <word , resulted records from db>
+        HashMap<String,ArrayList<String[]>> queryMap;
+        ArrayList<String[]> recordsList = new ArrayList<>();        //will holder all records we get as results
+
+
+        //remove useless spaces:
+        searchQuery = fixSpaces(searchQuery);
+        searchQuery = eliminateStopWords(searchQuery,db);
+
+
+
+        queryMap = mapAllTerms(searchQuery,db);
+        printMap(queryMap);
+
+        recordsList = deepSearch(queryMap,searchQuery,recordsList);
+        printRecords(recordsList);
+
+        return recordsList;
+
+
+    }
+
+
+    private ArrayList<String[]> deepSearch(HashMap<String, ArrayList<String[]>> queryMap, String searchQuery, ArrayList<String[]> recordsList) throws SQLException {
+
+        if(queryMap.size() == 1 || searchQuery.split(" ").length == 1){
+            //return last record by the only remaining term in query
+            System.out.println("deepSearch: \t no more terms, exiting.");
+            System.out.println("SEARCH QUERY: " + searchQuery);
+            return queryMap.get(searchQuery);
+        }
+
+        StringBuilder leftWord = new StringBuilder();
+        StringBuilder rightWord = new StringBuilder();
+
+
+//        reut & ! ( shay & idan | gal ) & elaya = searchQuery
+//        reut & shay & idan | gal  & elaya
+
+
+//        //TODO: handle () operator
+//        if(searchQuery.contains("(") && searchQuery.contains(")"))
+//            handleOperatorParentheses(searchQuery,db);
+
+//        //TODO: handle ! operator
+//        if(searchQuery.contains("!"))
+//            return handleOperatorNot(searchQuery,db);
+//
+        //TODO: handle | operator
+        if(searchQuery.contains("|")){
+
+            getOperands(leftWord,rightWord,searchQuery,"|");
+
+            doLogic(queryMap,leftWord,rightWord,"|");
+
+            searchQuery = searchQuery.substring(leftWord.length()+3);
+
+
+
+//            System.out.println("tempQuery after doLogic with OR : {" + searchQuery + "}");
+//            System.out.println("queryMap    after doLogic with OR : "); printMap(queryMap);
+
+        }
+
+
+//        //TODO: handle & operator
+//        if(searchQuery.contains("&"))
+//            return handleOperatorAnd(searchQuery,db);
+//
+//        //TODO: handle "" operator
+//        if(searchQuery.contains("\""))
+//            return handleOperatorQuotation(searchQuery,db);
+
+
+
+
+
+
+
+
+
+
+        return deepSearch(queryMap,searchQuery,recordsList);
+    }
+
+    private void printRecords(ArrayList<String[]> records) {
+        for(String[] arr : records){
+            System.out.print("{ ");
+            for(String s : arr){
+                System.out.print(s + " , ");
+            }
+            System.out.println(" }");
+        }
+    }
+
+    private void doLogic(HashMap<String, ArrayList<String[]>> queryMap, StringBuilder leftWord, StringBuilder rightWord, String op) {
+
+        System.out.println("doLogic: called.");
+        printMap(queryMap);
+
+
+        if(op.equals("|")) {
+            System.out.println("doLogic: case OR(|) ");
+
+            //unite all records into the right-side key
+            //TODO: fix yeah | yeah | yeah issue!
+            if(!rightWord.toString().equals(leftWord.toString())) {
+                for (String[] left : queryMap.get(leftWord.toString())) {
+                    queryMap.get(rightWord.toString()).add(left);
+                }
+            }
+
+            //remove left term
+            queryMap.remove(leftWord.toString());
+        }
+
+
+
+
+        if(op.equals("&")) {
+            System.out.println("doLogic: case AND(&) ");
+        }
+
+
+
+
+
+
+
+    }
+
+    private void printMap(HashMap<String, ArrayList<String[]>> queryMap) {
+        for(String key : queryMap.keySet()){
+            System.out.print(key + " : ");
+            for(String[] list : queryMap.get(key)){
+                for (String str : list){
+                    System.out.print(str + "\t");
+                }
+            }
+            System.out.println("");
+        }
+    }
+
+    private HashMap<String,ArrayList<String[]>> mapAllTerms(String searchQuery, DatabaseUtil db) throws SQLException {
+        HashMap<String,ArrayList<String[]>> map = new HashMap<>();
+        //iterate and map:
+
+        String[] words = searchQuery.split(" ");
+
+        for(String word : words){
+            ArrayList<String[]> records = new ArrayList<>();
+
+            if(true == isOperator(word))
+                continue;
+            db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
+            db.pStmt.setString(1,word);
+            db.rs = db.pStmt.executeQuery();
+
+            while(db.rs.next()){
+                String[] record = {db.rs.getString(1),      //word
+                        String.valueOf(db.rs.getInt(2)),    //id
+                        String.valueOf(db.rs.getInt(3)),    //appearances
+                        db.rs.getString(5),                 //name
+                        db.rs.getString(6)};                //link
+
+                records.add(record);
+            }
+            //TODO: remove clear, it ends up as null
+            map.put(word,new ArrayList<>(records));
+
+            System.out.println("mapAllTerms:  map=");
+            printMap(map);
+        }
+
+        return map;
+
+    }
+
+    private boolean isOperator(String word) {
+        boolean result = false;
+        if(word.equals("\"") || word.equals("&")
+                || word.equals("|") || word.equals("(")
+                || word.equals(")") || word.equals("!") )
+            result = true;
+
+        return result;
+    }
+
+
+    public ArrayList<String[]> search2(String searchQuery, DatabaseUtil db) throws SQLException {
 
         ArrayList<String[]> recordsList = new ArrayList<>();        //will holder all records we get as results
 
@@ -161,7 +350,8 @@ public class ParserUtil {
         String tempQuery = searchQuery;
         findSymbols(posList,searchQuery,'\"');
 
-        System.out.println("handleOperatorQuotation: tempQuery="+tempQuery);
+        System.out.print("handleOperatorQuotation: tempQuery = ");
+
 
         if(!posList.isEmpty()){
             for(int i=0; i < posList.size() ; i+=2){
@@ -220,6 +410,13 @@ public class ParserUtil {
 
     private void getOperands(StringBuilder leftWord, StringBuilder rightWord, String searchQuery,String operator) {
         String[] tempQuery = searchQuery.split(" ");
+
+//        System.out.println("getOperands: called.\ttempQuery = ");
+//
+//        for(String s : tempQuery)
+//            System.out.print(s + "  ,  ");
+//        System.out.println("");
+
 
         for (int i = 0; i < tempQuery.length ; i++) {
             if(tempQuery[i].equals(operator) && tempQuery[i+1] != null){
