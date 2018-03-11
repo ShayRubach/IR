@@ -122,6 +122,7 @@ public class ParserUtil {
                         db.rs.getString(6)};                //link
 
                 recordsList.add(record);
+
             }
         }
 
