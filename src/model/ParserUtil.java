@@ -84,9 +84,6 @@ public class ParserUtil {
         searchQuery = fixSpaces(searchQuery);
         searchQuery = eliminateStopWords(searchQuery,db);
 
-        //TODO: handle stop word with operators nearby!! remove operator???
-        //TODO: handle quotation marks. calculate all words in quotations into 1 (most left) word and pass them all as operand, then cut them all from query
-
 
         queryMap = mapAllTerms(searchQuery,db);
         //printMap(queryMap);
@@ -104,7 +101,7 @@ public class ParserUtil {
 
         if(searchQuery.split(" ").length == 1 || queryMap.size() == 0){
             //return last record by the only remaining term in query
-            System.out.println("deepSearch:\t\tno more terms, exiting with searchQuery={"+searchQuery+"}");
+            System.out.println("deepSearch:\tno more terms, exiting with searchQuery={"+searchQuery+"}");
             return queryMap.get(searchQuery);
         }
 
@@ -114,14 +111,13 @@ public class ParserUtil {
         if (opType == null) {
             opType = findFirstOperator(searchQuery);
         }
-        System.out.println("deepSearch:\t\topType={"+opType+"}");
+        System.out.println("deepSearch:\topType={"+opType+"}");
         StringBuilder leftWord = new StringBuilder();
         StringBuilder rightWord = new StringBuilder();
 
 
 
         if(opType.equals("(") || opType.equals(")")){
-
             searchQuery = handleOperatorParentheses(searchQuery,db,queryMap);
         }
         else if(opType.equals("|")){
@@ -129,7 +125,7 @@ public class ParserUtil {
             //get both operands to the sides of |
             getOperands(leftWord,rightWord,searchQuery,"|");
 
-            //TODO: call to a func that converts the !term to term with opposite records:
+
             //this function is not good:
             searchQuery = invertIfNotTerm(searchQuery,db,queryMap,leftWord,rightWord);
 
@@ -153,22 +149,22 @@ public class ParserUtil {
 
             //cut the treated part of the string: (leftWord_size + operator (1) + spaces (2)
             searchQuery = searchQuery.substring(leftWord.length()+3);
-            System.out.println("deepSearch:\t\tsearchQuery after handleOperatorAnd() ={"+searchQuery + "}");
+            System.out.println("deepSearch:\tsearchQuery after handleOperatorAnd() ={"+searchQuery + "}");
         }
         else if(opType.equals("!")){
 
             handleOperatorNot(searchQuery,db,queryMap);
             searchQuery = searchQuery.substring(searchQuery.indexOf("!")+1);
             searchQuery = fixSpaces(searchQuery);
-            System.out.println("deepSearch:\t\tsearchQuery after handleOperatorNot() ={"+searchQuery + "}");
+            System.out.println("deepSearch:\tsearchQuery after handleOperatorNot() ={"+searchQuery + "}");
 
         }
         else if(opType.equals("\"")){
-            //TODO: return the results to the map or soemthing..
+
             searchQuery = handleOperatorQuotation(searchQuery,db,queryMap);
-            System.out.println("deepSearch:\t\tsearchQuery after handleOperatorQuotation() ={"+searchQuery + "}");
+            System.out.println("deepSearch:\tsearchQuery after handleOperatorQuotation() ={"+searchQuery + "}");
             searchQuery = fixSpaces(searchQuery);
-            System.out.println("deepSearch:\t\tsearchQuery after fixSpaces() ={"+searchQuery + "}");
+            System.out.println("deepSearch:\tsearchQuery after fixSpaces() ={"+searchQuery + "}");
 
 
 
@@ -195,7 +191,7 @@ public class ParserUtil {
     private String invertIfNotTerm(String searchQuery, DatabaseUtil db, HashMap<String,
                                  ArrayList<String[]>> queryMap, StringBuilder left,
                                    StringBuilder right) throws SQLException {
-        System.out.println("invertIfNotTerm():\t\tcalled.");
+        System.out.println("invertIfNotTerm():\ttcalled.");
 
 
         String word = null;
@@ -223,7 +219,7 @@ public class ParserUtil {
         searchQuery = sb.toString();
         searchQuery = fixSpaces(searchQuery);
 
-        System.out.println("invertIfNotTerm():\t\tsearchQuery after substring={"+searchQuery+"}");
+        System.out.println("invertIfNotTerm():\tsearchQuery after substring={"+searchQuery+"}");
 
         //replace the right word (!) with the real word (operand)
         right.setLength(0);
@@ -287,7 +283,6 @@ public class ParserUtil {
             }
 
             //check if words are identical
-            // TODO: fix yeah | yeah | yeah issue!
             if(!rightWord.toString().equals(leftWord.toString())) {
                 //unite all records into the right-side key
                 for (String[] leftLine : queryMap.get(leftWord.toString())) {
@@ -397,115 +392,6 @@ public class ParserUtil {
         return  result;
     }
 
-//    private void doLogic2(HashMap<String, ArrayList<String[]>> queryMap, StringBuilder leftWord, StringBuilder rightWord, String op) {
-//
-//        System.out.println("doLogic: called. \t operator="+op);
-//        System.out.println("doLogic: map status:");
-//        printMap(queryMap);
-//
-//        String right = rightWord.toString();
-//        String left = leftWord.toString();
-//
-//        if(op.equals("|")) {
-//            System.out.println("doLogic: case OR(|) ");
-//
-//            if(queryMap.get(left).size() == 0 || queryMap.get(right).size() == 0){
-//                if (queryMap.get(right).size() == 0){
-//                    queryMap.remove(right);;
-//                }
-//                else{
-//                    queryMap.remove(left);
-//                }
-//                return;
-//            }
-//
-//            //check if words are identical
-//            // TODO: fix yeah | yeah | yeah issue!
-//            if(!rightWord.toString().equals(leftWord.toString())) {
-//                //unite all records into the right-side key
-//                for (String[] leftLine : queryMap.get(leftWord.toString())) {
-//                    queryMap.get(rightWord.toString()).add(leftLine);
-//                }
-//
-//            }
-//            //remove left term
-//            queryMap.remove(leftWord.toString());
-//
-//        }
-//        else if(op.equals("&")) {
-//            System.out.println("doLogic: case AND(&) ");
-//            System.out.println("---------:LEFT:" + left);
-//            System.out.println("---------:RIGHT:" + right);
-//
-//            if(queryMap.get(left).size() == 0 || queryMap.get(right).size() == 0){
-//                if(queryMap.get(left).size() == 0 ){
-//                    queryMap.remove(right);
-//                }
-//                else{
-//                    queryMap.remove(left);
-//                }
-//                return;
-//            }
-//
-//            //check if words are identical
-//            if(!right.equals(left)) {
-//
-//
-//
-//                for (int i = 0; i < queryMap.get(right).size() ; i++) {
-//                    String rightDocId = queryMap.get(right).get(i)[1];
-//                    boolean delete = true;
-//
-//                    for (int j = 0; j < queryMap.get(left).size() ; j++) {
-//
-//                        System.out.println("i = " + i + "\t\tj = " + j);
-//                        printMap(queryMap);
-//
-//                        String leftDocId = queryMap.get(left).get(j)[1];
-//
-//                        if(leftDocId.equals(rightDocId) /* && the words are different! */ ){
-//                            delete = false;
-//
-//                            //add left record to the right records list
-//                            int len =queryMap.get(left).get(j).length;
-//
-//                            queryMap.get(right).add(hackFromTheMovies(queryMap.get(left).get(j)));
-//                            queryMap.get(left).remove(j);
-//
-//                            //TODO: do we need to j-- ?
-//                            j--;
-//                        }
-//
-//                    }
-//                    if(queryMap.get(left).isEmpty()){
-//                        delete = false;
-//                    }
-//
-//                    //if the right term did not match any docId from the left terms, remove it.
-//                    if(true == delete){
-//                        queryMap.get(rightWord.toString()).remove(i);
-//                        i--;    //keeping the iterator in boundaries. a removal will decrease the list's size..
-//                    }
-//
-//                }
-//            }
-//
-//
-//
-//        }
-//
-//        //remove left term
-//        System.out.println((char)27 + "[31mAbout to remove left word from map!!" + (char)27 + "[0m");
-//        System.out.println((char)27 + "[31mMAP STATUS BEFORE REMOVING LEFT WORD:" + (char)27 + "[0m");
-//        printMap(queryMap);
-//        queryMap.remove(leftWord.toString());
-//        System.out.println((char)27 + "[31mLEFT WORD REMOVED.." + (char)27 + "[0m");
-//        System.out.println((char)27 + "[31mMAP STATUS AFTER REMOVING LEFT WORD:" + (char)27 + "[0m");
-//        printMap(queryMap);
-//
-//
-//    }
-
     private String[] hackFromTheMovies(String[] remove) {
         List<String> nonBlank = new ArrayList<>();
         for(String s: remove) {
@@ -576,65 +462,6 @@ public class ParserUtil {
         return result;
     }
 
-
-    public ArrayList<String[]> search2(String searchQuery, DatabaseUtil db) throws SQLException {
-
-        ArrayList<String[]> recordsList = new ArrayList<>();        //will holder all records we get as results
-
-        //remove useless spaces:
-        searchQuery = fixSpaces(searchQuery);
-        searchQuery = eliminateStopWords(searchQuery,db);
-        opHandler.countOperators(searchQuery);
-
-
-//        //TODO: handle () operator
-//        if(searchQuery.contains("(") && searchQuery.contains(")"))
-//            return handleOperatorParentheses(searchQuery,db);
-//
-//        System.out.println(searchQuery);
-//        //TODO: handle ! operator
-//        if(searchQuery.contains("!"))
-//            return handleOperatorNot(searchQuery,db);
-//
-//        //TODO: handle | operator
-//        if(searchQuery.contains("|"))
-//            return handleOperatorOr(searchQuery,db);
-//
-//        //TODO: handle & operator
-//        if(searchQuery.contains("&"))
-//            return handleOperatorAnd(searchQuery,db);
-//
-//        //TODO: handle "" operator
-//        if(searchQuery.contains("\""))
-//            return handleOperatorQuotation(searchQuery,db);
-
-
-        String words[] = removeDups(searchQuery.split(" "));
-
-        for(String word : words){
-            System.out.println("word: " + word);
-            db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
-            db.pStmt.setString(1,word);
-            db.rs = db.pStmt.executeQuery();
-
-            while(db.rs.next()){
-                String[] record = {db.rs.getString(1),      //word
-                        String.valueOf(db.rs.getInt(2)),    //id
-                        String.valueOf(db.rs.getInt(3)),    //appearances
-                        db.rs.getString(5),                 //name
-                        db.rs.getString(6)};                //link
-
-                recordsList.add(record);
-
-            }
-        }
-
-
-        return recordsList;
-
-
-    }
-
     private String[] removeDups(String[] words) {
         words = new HashSet<String>(Arrays.asList(words)).toArray(new String[0]);
         return words;
@@ -657,8 +484,8 @@ public class ParserUtil {
 
     private String handleOperatorQuotation(String searchQuery, DatabaseUtil db, HashMap<String, ArrayList<String[]>> queryMap) throws SQLException {
 
-        System.out.println("handleOperatorQuotation:\t\tcalled.");
-        System.out.println("handleOperatorQuotation:\t\tsearchQuery={"+searchQuery+"+}");
+        System.out.println("handleOperatorQuotation:\tcalled.");
+        System.out.println("handleOperatorQuotation:\tsearchQuery={"+searchQuery+"}");
 
         ArrayList<Integer> posList = new ArrayList<>();
         ArrayList<String[]>  records = new ArrayList<>();
@@ -667,17 +494,17 @@ public class ParserUtil {
         String tempQuery = searchQuery;
         findSymbols(posList,searchQuery,'\"');
 
-        System.out.println("handleOperatorQuotation:\t\tteamQuery={"+tempQuery+"+}");
+        System.out.println("handleOperatorQuotation:\tteamQuery={"+tempQuery+"}");
 
         if(!posList.isEmpty()){
             for(int i=0; i < posList.size() ; i+=2){
                 tempQuery = searchQuery.substring(posList.get(i)+2,posList.get(i+1)-1);
                 String[] splitStr = tempQuery.split(" ");
 
-                System.out.println("handleOperatorQuotation:\t\tteamQuery after trim={"+tempQuery+"+}");
+                System.out.println("handleOperatorQuotation:\tteamQuery after trim={"+tempQuery+"}");
 
                 String term = splitStr[0];
-                System.out.println("handleOperatorQuotation:\t\tleading term={"+term+"+}");
+                System.out.println("handleOperatorQuotation:\tleading term={"+term+"}");
 
                 db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
                 db.pStmt.setString(1,term);
@@ -686,7 +513,7 @@ public class ParserUtil {
                     String[] record = {
                             db.rs.getString(1),
                             String.valueOf(db.rs.getInt(2)),
-                            db.rs.getString(5),
+                            db.rs.getString(3),
                             db.rs.getString(5),
                             db.rs.getString(6)
                     };
@@ -696,7 +523,7 @@ public class ParserUtil {
             }
         }
         else {
-            System.out.println("handleOperatorQuotation:\t\tposList is empty.");
+            System.out.println("handleOperatorQuotation:\tposList is empty.");
         }
 
 
@@ -712,8 +539,8 @@ public class ParserUtil {
                         // {"chi","chu"}
                         String[] words = tempQuery.split(" ");
 
-                        System.out.println("handleOperatorQuotation:\t\tLine in file={"+line+"+}");
-                        System.out.println("handleOperatorQuotation:\t\twords after split={");
+                        System.out.println("handleOperatorQuotation:\tLine in file={"+line+"}");
+                        System.out.println("handleOperatorQuotation:\twords after split={");
                         for(String s : words){
                             System.out.print(s + " , ");
                         }   System.out.println("}");
@@ -733,7 +560,7 @@ public class ParserUtil {
                                     String[] anotherRecord = {
                                             db.rs.getString(1),
                                             String.valueOf(db.rs.getInt(2)),
-                                            db.rs.getString(5),
+                                            db.rs.getString(3),
                                             db.rs.getString(5),
                                             db.rs.getString(6)
                                     };
@@ -743,7 +570,7 @@ public class ParserUtil {
                         }
 
                         //update map with word[0]
-                        System.out.println("handleOperatorQuotation:\t\tupdating map key={"+words[0]+"+} with tempRecords list");
+                        System.out.println("handleOperatorQuotation:\tupdating map key={"+words[0]+"+} with tempRecords list");
                         queryMap.put(words[0],new ArrayList<>(tempRecords));
                         printRecords(tempRecords);
 
@@ -756,23 +583,23 @@ public class ParserUtil {
         }
 
 
-        System.out.println("handleOperatorQuotation:\t\ttempRecords before exiting.");
+        System.out.println("handleOperatorQuotation:\ttempRecords before exiting.");
         printRecords(tempRecords);
 
-        searchQuery = fixQuotedTerm(posList,searchQuery);
+        searchQuery = reassembleTerm(posList,searchQuery,true);
 
-        System.out.println("handleOperatorQuotation:\t\tsearchQuery before exiting={"+searchQuery+"+}");
+        System.out.println("handleOperatorQuotation:\tsearchQuery before exiting={"+searchQuery+"}");
 
 
         return searchQuery;
     }
 
-    private String fixQuotedTerm(ArrayList<Integer> posList,String searchQuery) {
+    private String reassembleTerm(ArrayList<Integer> posList, String searchQuery,boolean takeLeftTerm) {
 
         String tempQuery;
         StringBuilder sb = new StringBuilder();
-        System.out.println("fixQuotedTerm:\t\tcalled");
-        System.out.println("fixQuotedTerm:\t\tsearchQuery = {" + searchQuery + "}");
+        System.out.println("reassembleTerm():\tcalled");
+        System.out.println("reassembleTerm():\tsearchQuery = {" + searchQuery + "}");
 
 
         for (int i = 0; i < posList.size() ; i+=2) {
@@ -780,30 +607,35 @@ public class ParserUtil {
             tempQuery = searchQuery.substring(posList.get(i)+2,posList.get(i+1)-1);
             String[] splitStr = tempQuery.split(" ");
 
-            System.out.println("fixQuotedTerm:\t\tsplitStr={");
-            for(String s : splitStr)
-                System.out.print(s + " , ");
-            System.out.println("}");
+            System.out.print("reassembleTerm():\tsplitStr={");
+            for(String s : splitStr) System.out.print(s + " , "); System.out.println("}");
 
             sb.append(searchQuery.substring(0,posList.get(i)));     //take string upto the first "
-            sb.append(splitStr[0]);                                 //append the head term (X) of " X Y Z "
+            if(takeLeftTerm == true){
+                sb.append(splitStr[0]);                                 //append the head term (X) of " X Y Z "
+            }else{
+                sb.append(splitStr[splitStr.length-1]);                 //append the head term (Z) of " X Y Z "
+            }
+
             sb.append(searchQuery.substring(posList.get(i+1)+1));
 
         }
-        System.out.println("fixQuotedTerm:\t\tStringBuilder before exiting="+sb);
+        System.out.println("reassembleTerm():\tStringBuilder before exiting={"+sb+"}");
         return sb.toString();
     }
 
 
+
     private String handleOperatorParentheses(String searchQuery, DatabaseUtil db, HashMap<String, ArrayList<String[]>> queryMap) throws SQLException {
 
-        System.out.println("handleOperatorParentheses:\t\tcalled.");
-        System.out.println("handleOperatorParentheses:\t\tseachQuery=" + searchQuery);
+        System.out.println("handleOperatorParentheses():\tcalled.");
+        System.out.println("handleOperatorParentheses():\tseachQuery={"+searchQuery+"}");
 
         //records will hold all the records from the calculated inner query
-        HashMap<String, ArrayList<String[]>> innerMap = new HashMap<>();
+        HashMap<String, ArrayList<String[]>> innerMap = queryMap;
         ArrayList<Integer> posList = new ArrayList<>();
         String tempQuery = searchQuery;
+        String lastKey = null;
         ArrayList<String[]> records;
 
         //1. cut the string
@@ -811,36 +643,63 @@ public class ParserUtil {
         //3. take the key and value from map
         //4. assign to big map
         //5. reassemble query with only 1 word left from the inner query
-        //6. fuck off
 
 
 
         //1. cut the string
-        findSymbols(posList,searchQuery,'(');
+        //findSymbols(posList,searchQuery,'(');
+
+        findFirstSymbols(posList,searchQuery,'(');
 
         if(!posList.isEmpty()){
-            for(int i=0; i < posList.size() ; i+=2){
-                tempQuery = searchQuery.substring(posList.get(i)+2,posList.get(i+1)-1);
-                String[] splitStr = tempQuery.split(" ");
-                System.out.println("handleOperatorParentheses: TEMP QUERY: {" + tempQuery +"}" );
-            }
+            //for(int i=0; i < posList.size() ; i+=2){
+            tempQuery = searchQuery.substring(posList.get(0)+2,posList.get(1)-1);
+            String[] splitStr = tempQuery.split(" ");
+            lastKey = splitStr[splitStr.length-1];
+            System.out.println("handleOperatorParentheses():\tinner query={" + tempQuery+"}");
+            System.out.print("handleOperatorParentheses():\tsplitStr={");
+            for(String s : splitStr) System.out.print(s + " , "); System.out.println("}");
+            //}
         }
 
+//        if(!posList.isEmpty()){
+//            for(int i=0; i < posList.size() ; i+=2){
+//                tempQuery = searchQuery.substring(posList.get(i)+2,posList.get(i+1)-1);
+//                String[] splitStr = tempQuery.split(" ");
+//                lastKey = splitStr[splitStr.length-1];
+//                System.out.println("handleOperatorParentheses():\tinner query={" + tempQuery+"}");
+//                System.out.print("handleOperatorParentheses():\tsplitStr={");
+//                for(String s : splitStr) System.out.print(s + " , "); System.out.println("}");
+//            }
+//        }
+
+
+        //2. send to deepSearch
+        System.out.println("handleOperatorParentheses():\tsending {"+tempQuery+"} to deepSearch().");
+
+
+        //map size = 0 so deep search insta returns
+
+        records = deepSearch(queryMap,tempQuery,db);
+
+        System.out.println("handleOperatorParentheses():\t\trecords returned from deepSearch()=");
+        printRecords(records);
+
+
+        System.out.println("handleOperatorParentheses():\tmap status:");
+        printMap(queryMap);
+
+
+//        //3. take the key and value from map
+//        //4. assign to big map
+//        System.out.println("handleOperatorParentheses():\tupdating queryMap with innerMap {K,V}");
+//        queryMap.put(lastKey,innerMap.get(lastKey));
 
 
 
-        records = deepSearch(innerMap,searchQuery,db);
-
-
-
-
-
-
-
-
-
-
-
+        //5. reassemble query with only 1 word left from the inner query
+        searchQuery = reassembleTerm(posList,searchQuery,false);
+        System.out.println("handleOperatorParentheses():\tsearchQuery after reassemble {"+searchQuery+"} ");
 
 
 
@@ -852,7 +711,7 @@ public class ParserUtil {
 
     private void getOperands(StringBuilder leftWord, StringBuilder rightWord, String searchQuery,String operator) {
 
-        System.out.println("getOperands():\t\tcalled.");
+        System.out.println("getOperands():\tcalled.");
 
         String[] tempQuery = searchQuery.split(" ");
 
@@ -865,7 +724,7 @@ public class ParserUtil {
             }
         }
 
-        System.out.println("getOperands():\t\texiting with Left="+leftWord.toString()+" | Right="+rightWord.toString());
+        System.out.println("getOperands():\texiting with Left="+leftWord.toString()+" | Right="+rightWord.toString());
     }
 
     private ArrayList<String[]> handleOperatorAnd(String searchQuery, DatabaseUtil db) throws SQLException {
@@ -930,15 +789,15 @@ public class ParserUtil {
 
     //restriction: the operator must be to the left of the operand
     private void handleOperatorNot(String searchQuery, DatabaseUtil db,HashMap<String,ArrayList<String[]>> queryMap) throws SQLException {
-        System.out.println("handleOperatorNot():\t\tcalled.");
-        System.out.println("handleOperatorNot():\t\tsearchQuery={"+searchQuery+"}");
+        System.out.println("handleOperatorNot():\tcalled.");
+        System.out.println("handleOperatorNot():\tsearchQuery={"+searchQuery+"}");
         ArrayList<String[]> recordsList = new ArrayList<>();
         String[] tempQuery = searchQuery.split(" ");
         String word = null;
 
         for (int i = 0; i < tempQuery.length ; i++) {
             if(tempQuery[i].equals("!") && tempQuery[i+1] != null){
-                System.out.println((char)27 + "[35m" +"handleOperatorNot():\t\tperforming (!) on {" + tempQuery[i+1] +"}"+(char)27 + "[0m");
+                System.out.println((char)27 + "[35m" +"handleOperatorNot():\ttperforming (!) on {" + tempQuery[i+1] +"}"+(char)27 + "[0m");
                 word = tempQuery[i+1];
                 break;
             }
@@ -959,7 +818,7 @@ public class ParserUtil {
 
         queryMap.put(word,recordsList);
 
-        System.out.println((char)27 + "[36m" +"handleOperationNot():\t\tmap status before exit: " + (char)27 + "[0m");
+        System.out.println((char)27 + "[36m" +"handleOperationNot():\tmap status before exit: " + (char)27 + "[0m");
         printMap(queryMap);
 
         return;
@@ -970,8 +829,8 @@ public class ParserUtil {
 
     private String eliminateStopWords(String searchQuery, DatabaseUtil db) {
 
-        System.out.println("eliminateStopWords():\t\tcalled.");
-        System.out.println("eliminateStopWords():\t\tsearchQuery={"+searchQuery+"}");
+        System.out.println("eliminateStopWords():\tcalled.");
+        System.out.println("eliminateStopWords():\tsearchQuery={"+searchQuery+"}");
 
         searchQuery = searchQuery.toLowerCase();
         ArrayList<Integer> posList = new ArrayList<>();
@@ -995,14 +854,35 @@ public class ParserUtil {
             }
         }
 
-        System.out.println(sb.toString().trim().replaceAll(" +"," "));
+        System.out.println("eliminateStopWords():\tbefore exiting. StringBuilder={" + sb.toString().trim().replaceAll(" +"," ") + "}");
         return sb.toString().trim().replaceAll(" +"," ");
+    }
+
+    private void findFirstSymbols(ArrayList<Integer> posList, String searchQuery, char symbol) {
+
+        System.out.println("findFirstSymbols():\tcalled.");
+        System.out.println("findFirstSymbols():\tseachQuery=" + searchQuery);
+
+        for(int j = 0 ; j < searchQuery.length() ; ++j) {
+            if(searchQuery.charAt(j) == symbol ){
+                posList.add(j);
+                if(symbol == '('){
+                    while(searchQuery.charAt(++j) != ')' ){
+                        continue;
+                    }
+                    posList.add(j);
+                    return;
+                }
+            }
+        }
+        System.out.println("findFirstSymbols():\tsymbol="+symbol+"\tpostList="+posList);
+
     }
 
     private void findSymbols(ArrayList<Integer> posList, String searchQuery, char symbol) {
 
-        System.out.println("findSymbols:\t\tcalled.");
-        System.out.println("findSymbols:\t\tseachQuery=" + searchQuery);
+        System.out.println("findSymbols:\tcalled.");
+        System.out.println("findSymbols:\tseachQuery=" + searchQuery);
 
         for(int j = 0 ; j < searchQuery.length() ; ++j) {
             if(searchQuery.charAt(j) == symbol ){
@@ -1015,7 +895,7 @@ public class ParserUtil {
                 }
             }
         }
-        System.out.println("findSymbols:\t\tsymbol="+symbol+"\tpostList="+posList);
+        System.out.println("findSymbols:\tsymbol="+symbol+"\tpostList="+posList);
 
     }
 

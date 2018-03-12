@@ -162,7 +162,9 @@ public class MainGui {
     }
 
     private void displayFileContent(String path) throws FileNotFoundException {
-        System.out.println("displayFileContent: called. path="+path);
+        System.out.println("displayFileContent():\t\tcalled.");
+        System.out.println("displayFileContent():\t\tpath="+path);
+
         Scanner itr = new Scanner(new File(path));
         String line,word;
         StringBuilder fullFileContent = new StringBuilder();
@@ -180,6 +182,7 @@ public class MainGui {
 
         }
 
+        //TODO: highlight is going over all words in table, even when its not needed in certain docs. (union results)
         for (int i = 0; i < tableIndexDocResults.getRowCount() ; i++) {
             word = tableIndexDocResults.getValueAt(i,0).toString();
             pos = getWordPositions(pos,word,fullFileContent);
@@ -367,7 +370,7 @@ public class MainGui {
         //Search button:
         btnSearch.addActionListener(e -> {
 
-            //TODO: search event handling
+
             if(/* some validation on string */ true){
 
 
@@ -428,12 +431,12 @@ public class MainGui {
         //get id and name
 
         for(String[] record : records){
+            String name = record[3];
             String nameAndId = record[3] + " (" + record[1] +")";
 
             if(((DefaultComboBoxModel)jcbDocNameResults.getModel()).getIndexOf(nameAndId) == -1) {
                 jcbDocNameResults.addItem(nameAndId);
             }
-
         }
     }
 
