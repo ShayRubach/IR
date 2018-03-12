@@ -1,26 +1,27 @@
-Supported Operation:
-====================
 
-- <keyword_1> & <keyword_2> ... & <keyword_N>
-- <keyword_1> | <keyword_2> ... | <keyword_N>
-- ( <keyword_1> & <keyword_2> ) | <keyword_N>
-- "<keyword_1>"
-- !<keyword_1>
+    Supported Operation:
+    ====================
 
-
-
+    - word & word... & word
+    - word | word... | word
+    - (word & word) | word
+    - "word"
+    - !word
 
 
 
 
-Admin How-To:
-=============
+    Admin How-To:
+    =============
 
-Login as admin with the secret password, and you will be able to perform:
+    Login as admin with the secret password, and you will be able to:
 
-- Add new document to the local storage
-- Remove existing document from the local storage
-- Feel superior
+    - Add new document to the local storage (batch or singles)
+    - Remove existing document from the local storage
+    - Reset Application data & file database
+    - Feel superior (!)
 
 
-Enjoy.
+
+    Enjoy,
+    team pwnz(c)

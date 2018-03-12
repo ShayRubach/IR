@@ -120,6 +120,24 @@ public class MainGui {
         //set enter as search button default stroke
         mainFrame.getRootPane().setDefaultButton(btnSearch);
 
+        //changeTheme(mainFrame);
+
+
+    }
+
+    private void changeTheme(JFrame mainFrame) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            //e.printStackTrace();
+        } catch (InstantiationException e) {
+            //e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            //e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            //e.printStackTrace();
+        }
+        SwingUtilities.updateComponentTreeUI(mainFrame);
     }
 
 
@@ -349,23 +367,8 @@ public class MainGui {
 
 
 
-        //TODO: turn jcbAddDoc into JList for group selection of documents
-        btnAddDoc.addActionListener(e -> {
-//            //make sure some document is chosen
-//            if(jcbAddDoc.getSelectedIndex() > 1){
-//                String fileName = jcbAddDoc.getSelectedItem().toString();
-//                try {
-//                    addFileToStorage(fileName);
-//                    loadDbToApp();
-//                    jcbAddDoc.setSelectedIndex(0);
-//                } catch (FileNotFoundException e1) {
-//                    System.out.println("addFileToStorage called. File not found");
-//                    e1.printStackTrace();
-//                } catch (SQLException e1) {
-//                    e1.printStackTrace();
-//                }
-//            }
 
+        btnAddDoc.addActionListener(e -> {
 
             //make sure some document is chosen
             if(jcbAddDoc.getSelectedIndex() > 1) {
@@ -400,14 +403,9 @@ public class MainGui {
             else{
                 return;
             }
-
-
-
-
-
         });
 
-        //TODO: turn jcbRemoveDoc into JList for group selection of documents
+
         btnRemoveDoc.addActionListener(e -> {
             //make sure some document is chosen
             if(jcbRemoveDoc.getSelectedIndex() > 1){
@@ -447,6 +445,10 @@ public class MainGui {
                         displayDocSummery(records);
                         displayDocsInComboBox(records);
 
+                    }
+                    else{
+                        System.out.println("no records available.");
+                        return;
                     }
 
 

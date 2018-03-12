@@ -320,6 +320,7 @@ public class ParserUtil {
                 int size = queryMap.get(right).size();
 
                 for (int i = 0; i < size ; i++) {
+
                     String rightDocId = queryMap.get(right).get(i)[1];
                     boolean delete = true;
 
@@ -379,13 +380,22 @@ public class ParserUtil {
 
     private boolean listsAreIdentical(HashMap<String, ArrayList<String[]>> queryMap,String left, String right) {
         boolean result = false;
+
+
+
+        if( queryMap.get(left) == null || queryMap.get(right) == null )
+            return true;
+
+//        if(leftListSize == rightListSize
+//                && queryMap.get(left).get(0)[0].equals(queryMap.get(right).get(0)[0])
+//                && queryMap.get(left).get(leftListSize-1)[0].equals(queryMap.get(right).get(rightListSize-1)[0])){
+//            result = true;
+//        }
+
         int leftListSize = queryMap.get(left).size();
         int rightListSize = queryMap.get(right).size();
 
-
-        if(leftListSize == rightListSize
-                && queryMap.get(left).get(0)[0].equals(queryMap.get(right).get(0)[0])
-                && queryMap.get(left).get(leftListSize-1)[0].equals(queryMap.get(right).get(rightListSize-1)[0])){
+        if(leftListSize == rightListSize ){
             result = true;
         }
 
@@ -567,6 +577,11 @@ public class ParserUtil {
                                     tempRecords.add(anotherRecord);
                                 }
                             }
+                        }
+                        else if(words.length==1){
+                            StringBuilder builder = new StringBuilder();
+                            builder.append(" ").append(words[0]).append(" ");
+                            words[0] = builder.toString();
                         }
 
                         //update map with word[0]
