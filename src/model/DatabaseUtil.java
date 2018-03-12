@@ -60,6 +60,7 @@ public class DatabaseUtil {
         File[] fileList = sourceFolder.listFiles();
         for (File f : fileList ) {
             docArrayList.add(f.getName());
+
         }
         //convert the list to string[] and return it
         return docArrayList.toArray(new String[docArrayList.size()]);

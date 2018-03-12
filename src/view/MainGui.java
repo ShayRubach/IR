@@ -19,6 +19,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static javax.swing.ListSelectionModel.*;
+
 public class MainGui {
 
     private AppController   appCtrl;
@@ -41,9 +43,12 @@ public class MainGui {
     private JTextArea taFullDocContent;
     private JTextArea taDocSummery;
     private JButton btnResetAppDb;
+    private JList listAddDocs;
+    private JLabel lblDocList;
     private JFrame mainFrame;
     private DefaultTableModel modelIndexDocResults;
     private ArrayList<String[]> records;
+    private DefaultListModel listModel = new DefaultListModel();
 
 
     public static final String LOG_OUT = "Log Out";
@@ -59,9 +64,19 @@ public class MainGui {
         initButtons();
         initButtonListeners();
         initComboxBoxes();
+        initLists();
+
         initComboxBoxesListeners();
         initTables();
         initTextArea();
+
+    }
+
+    private void initLists() {
+        listAddDocs.setModel(listModel);
+        listAddDocs.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        listAddDocs.setEnabled(false);
+
 
     }
 
@@ -145,11 +160,11 @@ public class MainGui {
         });
 
         jcbAddDoc.addActionListener(e -> {
-            if(jcbAddDoc.getSelectedIndex() > 1){
-                btnAddDoc.setEnabled(true);
-            }
-            else
-                btnAddDoc.setEnabled(false);
+//            if(jcbAddDoc.getSelectedIndex() > 1){
+//                btnAddDoc.setEnabled(true);
+//            }
+//            else
+//                btnAddDoc.setEnabled(false);
         });
 
         jcbRemoveDoc.addActionListener(e -> {
@@ -290,6 +305,8 @@ public class MainGui {
                 jcbAddDoc.setEnabled(false);
                 jcbRemoveDoc.setEnabled(false);
                 btnResetAppDb.setEnabled(false);
+                listAddDocs.setEnabled(false);
+                btnAddDoc.setEnabled(false);
 
             }
             else {
@@ -309,6 +326,8 @@ public class MainGui {
                     jcbAddDoc.setEnabled(true);
                     jcbRemoveDoc.setEnabled(true);
                     btnResetAppDb.setEnabled(true);
+                    btnAddDoc.setEnabled(true);
+                    listAddDocs.setEnabled(true);
 
                     try {
                         loadDbToApp();
@@ -332,8 +351,24 @@ public class MainGui {
 
         //TODO: turn jcbAddDoc into JList for group selection of documents
         btnAddDoc.addActionListener(e -> {
+//            //make sure some document is chosen
+//            if(jcbAddDoc.getSelectedIndex() > 1){
+//                String fileName = jcbAddDoc.getSelectedItem().toString();
+//                try {
+//                    addFileToStorage(fileName);
+//                    loadDbToApp();
+//                    jcbAddDoc.setSelectedIndex(0);
+//                } catch (FileNotFoundException e1) {
+//                    System.out.println("addFileToStorage called. File not found");
+//                    e1.printStackTrace();
+//                } catch (SQLException e1) {
+//                    e1.printStackTrace();
+//                }
+//            }
+
+
             //make sure some document is chosen
-            if(jcbAddDoc.getSelectedIndex() > 1){
+            if(jcbAddDoc.getSelectedIndex() > 1) {
                 String fileName = jcbAddDoc.getSelectedItem().toString();
                 try {
                     addFileToStorage(fileName);
@@ -345,7 +380,29 @@ public class MainGui {
                 } catch (SQLException e1) {
                     e1.printStackTrace();
                 }
+
             }
+            else if(listAddDocs.getSelectedIndices().length != 0){      //selected from group
+                int[] items = listAddDocs.getSelectedIndices();
+                try {
+                    for(int i : items){
+                        addFileToStorage(listAddDocs.getModel().getElementAt(i).toString());
+                    }
+                    loadDbToApp();
+                } catch (FileNotFoundException e1) {
+                    System.out.println("addFileToStorage called. File not found");
+                    e1.printStackTrace();
+                } catch (SQLException e1) {
+
+                    e1.printStackTrace();
+                }
+            }
+            else{
+                return;
+            }
+
+
+
 
 
         });
@@ -468,9 +525,12 @@ public class MainGui {
         //get all available source files and display them on associated combo box:
         docList = appCtrl.getAvailableSourceFiles();
         defaultComboBoxHeader(jcbAddDoc,"Document");
+        clearDocList(listModel);
+
         for(String doc : docList){
             //doc = doc.substring(0,doc.length()-4);
             jcbAddDoc.addItem(doc);
+            listModel.addElement(doc);
         }
 
         //get removed docs back into add area
@@ -478,6 +538,7 @@ public class MainGui {
         for(String doc : docList){
             //doc = doc.substring(0,doc.length()-4);
             jcbAddDoc.addItem(doc);
+            listModel.addElement(doc);
         }
 
         //get all storage files and display them on associated combo box:
@@ -486,7 +547,10 @@ public class MainGui {
         for(String s: docList)
             jcbRemoveDoc.addItem(s);
 
+    }
 
+    private void clearDocList(DefaultListModel model) {
+        model.setSize(0);
     }
 
 
@@ -536,5 +600,9 @@ public class MainGui {
 
     public JTextField getTfSearchLine() {
         return tfSearchLine;
+    }
+
+    public DefaultListModel getListModel() {
+        return listModel;
     }
 }
