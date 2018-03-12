@@ -189,7 +189,7 @@ public class ParserUtil {
     }
 
     private String invertIfNotTerm(String searchQuery, DatabaseUtil db, HashMap<String,
-                                 ArrayList<String[]>> queryMap, StringBuilder left,
+            ArrayList<String[]>> queryMap, StringBuilder left,
                                    StringBuilder right) throws SQLException {
         System.out.println("invertIfNotTerm():\ttcalled.");
 
@@ -299,20 +299,20 @@ public class ParserUtil {
             System.out.println("---------:LEFT:" + left);
             System.out.println("---------:RIGHT:" + right);
 
-            if(true == listsAreIdentical(queryMap,left,right)){
-                System.out.println("doLogic: lists are identical. ");
-                return;
-            }
-
-            if(queryMap.get(left).size() == 0 || queryMap.get(right).size() == 0){
-                if(queryMap.get(left).size() == 0 ){
-                    queryMap.remove(right);
-                }
-                else{
-                    queryMap.remove(left);
-                }
-                return;
-            }
+//            if(true == listsAreIdentical(queryMap,left,right)){
+//                System.out.println("doLogic: lists are identical. ");
+//                return;
+//            }
+//
+//            if(queryMap.get(left).size() == 0 || queryMap.get(right).size() == 0){
+//                if(queryMap.get(left).size() == 0 ){
+//                    queryMap.remove(right);
+//                }
+//                else{
+//                    queryMap.remove(left);
+//                }
+//                return;
+//            }
 
             //check if words are identical
             if(!right.equals(left)) {
@@ -730,7 +730,6 @@ public class ParserUtil {
 
         String[] tempQuery = searchQuery.split(" ");
 
-
         for (int i = 0; i < tempQuery.length ; i++) {
             if(tempQuery[i].equals(operator) && tempQuery[i+1] != null){
                 leftWord.append(tempQuery[i-1]);
@@ -841,7 +840,6 @@ public class ParserUtil {
     }
 
 
-
     private String eliminateStopWords(String searchQuery, DatabaseUtil db) {
 
         System.out.println("eliminateStopWords():\tcalled.");
@@ -919,20 +917,57 @@ public class ParserUtil {
         searchQuery = searchQuery.toLowerCase();
         String word,regexWord;
 
+        String[] splitStr = searchQuery.trim().split(" ");
+        StringBuilder builder = new StringBuilder();
+
         try {
             //iterate over stop words file
             Scanner itr = new Scanner(new File(stopListPath));
 
             while(itr.hasNext()){
                 word = itr.next();
-                regexWord = "\\b" + word + "\\b";
-                searchQuery = searchQuery.replaceAll(regexWord, fixedSpacesLength(word));
+                for (int i = 0; i < splitStr.length ; i++) {
+                    if(word.equals(splitStr[i])){
+                        System.out.println("word={" + word + "} splitstr["+i+"] = {" +splitStr[i]+"}");
+                        System.out.println("splitstr: {");
+                        for(String s : splitStr)
+                            System.out.println(s);
+                        System.out.println();
+                        //check sides for operators
+                        if(i>0 && i != 1) { //check left //if(i>0)
+                            System.out.println("WORD IS FROM THE LEFT");
+                            for (int j = 0; j < splitStr.length; j++) {
+                                if(isOperator(splitStr[j])== false && j!=i || isOperator(splitStr[j])== true && j>i){
+                                    System.out.println("appending {" +splitStr[j]+ "}");
+                                    builder.append(splitStr[j] + " ");
+                                }
+                            }
+                        }
+                        else{
+                            System.out.println("WORD IS FROM THE RIGHT");
+                            for (int j = i+2; j < splitStr.length; j++) {
+                                    System.out.println("appending {" +splitStr[j]+ "}");
+                                    builder.append(splitStr[j] + " ");
+                            }
+                        }
+
+                        searchQuery = builder.toString();
+                        searchQuery = fixSpaces(searchQuery);
+                        regexWord = "\\b" + word + "\\b";
+                        searchQuery = searchQuery.replaceAll(regexWord, fixedSpacesLength(word));
+                        builder.setLength(0);
+                    }
+                }
+                //                regexWord = "\\b" + word + "\\b";
+//                searchQuery = searchQuery.replaceAll(regexWord, fixedSpacesLength(word));
             }
         }
         catch (FileNotFoundException e) {
             System.out.println("eliminateStopWords called. cant find the stop list file");
             e.printStackTrace();
         }
+
+        System.out.println("eliminateStopWords called.\tsearchQuery={"+searchQuery+"}");
 
         return searchQuery;
     }
