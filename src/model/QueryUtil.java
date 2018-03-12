@@ -59,7 +59,7 @@ public class QueryUtil {
 
 
     public static final String GET_DOCS_BY_TERM =
-            "SELECT * FROM index_files,storage_files " +
+            "SELECT DISTINCT * FROM index_files,storage_files " +
                     "WHERE word=? " +
                     "AND doc_id=id " +
                     "AND display=1 " +
@@ -103,6 +103,14 @@ public class QueryUtil {
 
     public static final String RESET_DB =
             "DROP TABLE IF EXISTS index_files,storage_files";
+
+
+    public static final String GET_DOCS_BY_TERM_AND_ID =
+            "SELECT DISTINCT * FROM index_files,storage_files " +
+                    "WHERE word=? " +
+                    "AND id=? " +
+                    "AND display=1 " +
+                    "ORDER BY appears DESC";
 
 
     //SELECT * FROM (SELECT * FROM index_files WHERE word='did') as result WHERE result.doc_id IN (SELECT doc_id FROM index_files WHERE word='i')

@@ -111,8 +111,11 @@ public class ParserUtil {
 
 
 
-
-        String opType = findFirstOperator(searchQuery);
+        String opType;
+        if(true == containsQuotes(searchQuery))
+            opType = "\"";
+        else
+            opType = findFirstOperator(searchQuery);
 
         System.out.println("OP TYPE : " + opType);
 
@@ -136,7 +139,6 @@ public class ParserUtil {
 
             //cut the treated part of the string: (leftWord_size + operator (1) + spaces (2)
             searchQuery = searchQuery.substring(leftWord.length()+3);
-
 
 
         }
@@ -164,6 +166,17 @@ public class ParserUtil {
             searchQuery = fixSpaces(searchQuery);
             System.out.println("AFTER SUBSTRING IN (!) : " + searchQuery);
 
+        }
+
+        // "shay and reut" -> shay
+        else if(opType.equals("\"")){
+            //TODO: return the results to the map or soemthing..
+            searchQuery = handleOperatorQuotation(searchQuery,db,queryMap);
+
+            //searchQuery = searchQuery.substring(searchQuery.indexOf("!")+1);
+            searchQuery = fixSpaces(searchQuery);
+
+            System.out.println("AFTER SUBSTRING IN (\") : " + searchQuery);
 
         }
 
@@ -192,6 +205,15 @@ public class ParserUtil {
         leftWord.setLength(0);
         rightWord.setLength(0);
         return deepSearch(queryMap,searchQuery,db);
+    }
+
+    private boolean containsQuotes(String searchQuery) {
+        boolean result = false;
+        for (int i = 0 ; i < searchQuery.length() ; ++i){
+            if(searchQuery.charAt(i) == '\"')
+                result = true;
+        }
+        return result;
     }
 
     private String invertIfNotTerm(String searchQuery, DatabaseUtil db, HashMap<String,
@@ -347,14 +369,9 @@ public class ParserUtil {
                             delete = false;
 
                             //add left record to the right records list
-
                             queryMap.get(right).add(hackFromTheMovies(queryMap.get(left).get(j)));
-                           // queryMap.get(left).remove(j);
 
-                            //TODO: do we need to j-- ?
-                          //  j--;
                         }
-
                     }
 
 
@@ -371,12 +388,8 @@ public class ParserUtil {
                             i = size;
                         }
                     }
-
                 }
             }
-
-
-
         }
 
         //remove left term
@@ -664,7 +677,7 @@ public class ParserUtil {
         return searchQuery;
     }
 
-    private ArrayList<String[]> handleOperatorQuotation(String searchQuery, DatabaseUtil db) throws SQLException {
+    private String handleOperatorQuotation(String searchQuery, DatabaseUtil db, HashMap<String, ArrayList<String[]>> queryMap) throws SQLException {
 
         ArrayList<Integer> posList = new ArrayList<>();
         ArrayList<String[]>  records = new ArrayList<>();
@@ -673,32 +686,39 @@ public class ParserUtil {
         String tempQuery = searchQuery;
         findSymbols(posList,searchQuery,'\"');
 
-        System.out.print("handleOperatorQuotation: tempQuery = ");
-
+        System.out.println("handleOperatorQuotation: tempQuery = " + tempQuery);
 
         if(!posList.isEmpty()){
             for(int i=0; i < posList.size() ; i+=2){
                 tempQuery = searchQuery.substring(posList.get(i)+2,posList.get(i+1)-1);
                 String[] splitStr = tempQuery.split(" ");
 
+                System.out.println("handleOperatorQuotation: AFTER TRIM->tempQuery = {" + tempQuery + "}");
 
-                for(int j=0; j < splitStr.length ; j++){
-                    db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
-                    db.pStmt.setString(1,splitStr[j]);
-                    db.rs = db.pStmt.executeQuery();
-                    while(db.rs.next()){
-                        String[] record = {
-                                db.rs.getString(1),
-                                String.valueOf(db.rs.getInt(2)),
-                                db.rs.getString(5),
-                                db.rs.getString(5),
-                                db.rs.getString(6)
-                        };
-                        records.add(record);
-                    }
+                String term = splitStr[0];
+                System.out.println("TERM: "+ term);
+
+                db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM);
+                db.pStmt.setString(1,term);
+                db.rs = db.pStmt.executeQuery();
+                while(db.rs.next()){
+                    String[] record = {
+                            db.rs.getString(1),
+                            String.valueOf(db.rs.getInt(2)),
+                            db.rs.getString(5),
+                            db.rs.getString(5),
+                            db.rs.getString(6)
+                    };
+                    records.add(record);
                 }
+
             }
         }
+        else {
+            System.out.println("handleOperatorQuotation:\t\t posList is empty.");
+        }
+
+
 
         for(String[] record : records){
             try {
@@ -707,6 +727,45 @@ public class ParserUtil {
                     String line = itr.nextLine();
                     if(line.trim().contains(tempQuery)){
                         tempRecords.add(record);
+
+                        // {"chi","chu"}
+                        String[] words = tempQuery.split(" ");
+
+                        System.out.println("LINE : " + line);
+                        System.out.println("WORDS AFTER SPLIT");
+                        for(String s : words){
+                            System.out.println(s);
+                        }
+
+
+                        if(words.length > 1){
+
+                            ///start from 2nd word. 1st is a header
+                            for (int i = 1; i < words.length ; i++) {
+
+                                //"chu"
+                                db.pStmt = db.getConn().prepareStatement(QueryUtil.GET_DOCS_BY_TERM_AND_ID);
+                                db.pStmt.setString(1,words[i]);         //our word friend
+                                db.pStmt.setString(2,record[1]);        //id
+                                db.rs = db.pStmt.executeQuery();
+                                while(db.rs.next()){
+                                    String[] anotherRecord = {
+                                            db.rs.getString(1),
+                                            String.valueOf(db.rs.getInt(2)),
+                                            db.rs.getString(5),
+                                            db.rs.getString(5),
+                                            db.rs.getString(6)
+                                    };
+                                    tempRecords.add(anotherRecord);
+                                }
+                            }
+                        }
+
+                        //update map with word[0]
+                        queryMap.put(words[0],new ArrayList<>(tempRecords));
+                        System.out.println("tempRecords of : " + words[0]);
+                        printRecords(tempRecords);
+
                         break;
                     }
                 }
@@ -716,11 +775,47 @@ public class ParserUtil {
         }
 
 
+        System.out.println("TEMP RECORDS AFTERALL SHIT: ");
+        printRecords(tempRecords);
+
+        searchQuery = fixQuotedTerm(posList,searchQuery);
+
+        System.out.println("searchQuery AFTER fixQuotedTerm = " + searchQuery);
 
 
-        //TODO: fix empty return val here. "something" is not working for some reason while "it" "a" and more works.
-        return new ArrayList<>(tempRecords);
+        return searchQuery;
     }
+
+    private String fixQuotedTerm(ArrayList<Integer> posList,String searchQuery) {
+
+        String tempQuery;
+        StringBuilder sb = new StringBuilder();
+        System.out.println("fixQuotedTerm: called");
+        System.out.println("fixQuotedTerm: searchQuery = {" + searchQuery + "}");
+
+
+        for (int i = 0; i < posList.size() ; i+=2) {
+            //get the " X Y Z " phrase
+            tempQuery = searchQuery.substring(posList.get(i)+2,posList.get(i+1)-1);
+            String[] splitStr = tempQuery.split(" ");
+
+            System.out.println("split str:  ");
+            for(String s : splitStr)
+                System.out.println(s);
+
+            sb.append(searchQuery.substring(0,posList.get(i)));     //take string upto the first "
+            System.out.println("SB1 : {" + sb + "}");
+            sb.append(splitStr[0]);                                 //append the head term (X) of " X Y Z "
+            System.out.println("SB2 : {" + sb + "}");
+            sb.append(searchQuery.substring(posList.get(i+1)+1));
+            System.out.println("SB3 : {" + sb + "}");
+
+
+
+        }
+        return sb.toString();
+    }
+
 
     private ArrayList<String[]> handleOperatorParentheses(String searchQuery, DatabaseUtil db) {
         ArrayList<String[]> recordsList = new ArrayList<>();
